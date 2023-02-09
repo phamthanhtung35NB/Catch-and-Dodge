@@ -8,7 +8,7 @@ git add: Thêm một tập tin hoặc thư mục vào stage.
 
 git commit: Ghi nhận tất cả các thay đổi đã được stage vào lịch sử repository.
 
-git push: git push --set-upstream origin main //Đẩy tất cả các commit mới lên máy chủ. ok
+git push: git push --set-upstream origin main //Đẩy tất cả các commit mới lên máy chủ. ok đã sửa rồi
 
 git pull: Tải về tất cả các thay đổi từ máy chủ và merge với bản làm việc của bạn. ddoongf booj tuwf treen mangj veef mays
 
