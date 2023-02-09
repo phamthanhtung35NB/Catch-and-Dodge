@@ -7,7 +7,7 @@ const std::string WINDOW_TITLE = "An Implementation of Code.org Painter";
 
 //void quitSDL(SDL_Window* window, SDL_Renderer* renderer);
 
-
+int smulll;
 int main(int argc, char* argv[])
 {
  SDL_Window* window;
