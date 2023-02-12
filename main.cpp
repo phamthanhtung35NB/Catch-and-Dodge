@@ -6,7 +6,7 @@ const int SCREEN_WIDTH = 540, SCREEN_HEIGHT = 960;
 const std::string WINDOW_TITLE = "An Implementation of Code.org Painter";
 
 //void quitSDL(SDL_Window* window, SDL_Renderer* renderer);
-
+// laanf 3
 int smulll;
 int main(int argc, char* argv[])
 {
