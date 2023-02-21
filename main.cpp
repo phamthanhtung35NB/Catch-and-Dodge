@@ -9,13 +9,17 @@
 #include "login.cpp"
 
 
+// Your code to to push student code up to Firebase goes here... 
+
+
 // const int SCREEN_WIDTH = 1000;
 // const int SCREEN_HEIGHT = 1000;
-
+std::string name;
+std::string pass;
 int main( int argc, char* args[] )
 {
     login();
-    run();
+    start();
     return 0;
 }
 
