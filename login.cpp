@@ -6,28 +6,36 @@
 #include <windows.h>
 
 //check cos tk chua
-bool check(const std::string& name,const std::string& password);
+bool check(const std::string& name_login,const std::string& pass_login);
 
 // tao tk or dang nhap
-int loginTK(std::string& name,std::string& password);
+int loginTK(std::string& name_login,std::string& pass_login);
 
 void nhap();
 
 int login(){
 	//nhap name + pass
+	std::string name_login;
+	std::string pass_login;
+	dangNhapLai:
+	nhap(name_login,pass_login);
 	// kiem tra
+	
 	//tao tk or login
 	//tra lai so diem
-	return loginTK();
+	return loginTK(name_login,pass_login);
 }
-void nhap(){
-	std::cin>>name;
-	std::cin>>pass;
+void nhap(std::string& name_login,std::string& pass_login){
+	getline(std::cin,name_login);
+	getline(std::cin,pass_login);
 }
-int loginTK(std::string& name,std::string& password){
-	if (check(name,password))
+int loginTK(std::string& name_login,std::string& pass_login){
+	if (check(name_login,pass_login))
 	{
-		//print diem cao nhat
+		name=name_login;
+		pass=pass_login;
+		//return diemMax
+
 	}
 	else{
 		//chuwa cos tk
@@ -37,10 +45,16 @@ int loginTK(std::string& name,std::string& password){
 		// lap tk moi 
 		if (ktr=='Y'||ktr=='y')
 		{
-			//luu thong tin 
+			//khoi tao tk
+			name=name_login;
+			pass=pass_login;
+			diemmax=0;
+			//luu thong tin name,pass,diemmax;
+			return 0;
 		}
 		else
 		{
+			std::goto dangNhapLai;
 			//ra dang nhap lai
 		}
 	}
@@ -48,7 +62,7 @@ int loginTK(std::string& name,std::string& password){
 }
 
 bool check(const std::string& name,const std::string& password){
-    //check xem co tk chua
+    //check excel xem co tk chua
     if (/*neu co roi*/true)
     {
         return true;

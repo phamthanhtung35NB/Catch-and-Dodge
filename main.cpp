@@ -16,6 +16,7 @@
 // const int SCREEN_HEIGHT = 1000;
 std::string name;
 std::string pass;
+int diemmax;
 int main( int argc, char* args[] )
 {
     login();
