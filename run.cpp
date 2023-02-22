@@ -7,7 +7,9 @@
 const int SCREEN_WIDTH = 1000;
 const int SCREEN_HEIGHT = 1000;
 
+//random diem sẽ +
 int ramdomDiemA();
+//random diểm trượt (trừ điểm)
 int randomTruot(const int& x,const int& y);
 
 

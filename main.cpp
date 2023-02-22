@@ -7,6 +7,7 @@
 #include <SDL2/SDL_ttf.h> 
 #include "run.cpp"
 #include "login.cpp"
+#include "erom.h"
 
 
 // Your code to to push student code up to Firebase goes here... 
@@ -16,10 +17,10 @@
 // const int SCREEN_HEIGHT = 1000;
 std::string name;
 std::string pass;
-int diemmax;
+std::string diemmax;
 int main( int argc, char* args[] )
 {
-    login();
+    diemmax=login();
     start();
     return 0;
 }

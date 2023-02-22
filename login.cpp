@@ -4,19 +4,21 @@
 #include <exception>
 #include <string>
 #include <windows.h>
+#include "docGhiFile.cpp"
+#include "erom.h"
 
 //check cos tk chua
-bool check(const std::string& name_login,const std::string& pass_login);
+bool check(std::string& name_login,std::string& pass_login);
 
 // tao tk or dang nhap
-int loginTK(std::string& name_login,std::string& pass_login);
-
+std::string loginTK(std::string& name_login,std::string& pass_login);
+// nhập thông tin tk
 void nhap();
+std::string name_login;
+std::string pass_login;
 
-int login(){
+std::string login(){
 	//nhap name + pass
-	std::string name_login;
-	std::string pass_login;
 	dangNhapLai:
 	nhap(name_login,pass_login);
 	// kiem tra
@@ -29,7 +31,9 @@ void nhap(std::string& name_login,std::string& pass_login){
 	getline(std::cin,name_login);
 	getline(std::cin,pass_login);
 }
-int loginTK(std::string& name_login,std::string& pass_login){
+std::string loginTK(std::string& name_login,std::string& pass_login){
+	
+	
 	if (check(name_login,pass_login))
 	{
 		name=name_login;
@@ -37,7 +41,8 @@ int loginTK(std::string& name_login,std::string& pass_login){
 		//return diemMax
 
 	}
-	else{
+	else
+	{
 		//chuwa cos tk
 		char ktr='n';
 		// chon dang nhap lai
@@ -48,9 +53,9 @@ int loginTK(std::string& name_login,std::string& pass_login){
 			//khoi tao tk
 			name=name_login;
 			pass=pass_login;
-			diemmax=0;
+			diemmax="0";
 			//luu thong tin name,pass,diemmax;
-			return 0;
+			return diemmax;
 		}
 		else
 		{
@@ -61,16 +66,19 @@ int loginTK(std::string& name_login,std::string& pass_login){
 	
 }
 
-bool check(const std::string& name,const std::string& password){
+bool check(std::string& name_login,std::string& pass_login){
     //check excel xem co tk chua
-    if (/*neu co roi*/true)
-    {
-        return true;
-    }
-    else
+	std::string KQcheck=checkTrongFile(name_login,pass_login);
+    if (KQcheck=="MK_SAI")
     {
         return false;
     }
+	else if (KQcheck=="CHUA_CO")
+	{
+		return false;
+	}
+    return 1;
+    
 }
 
 
