@@ -7,37 +7,38 @@
 #include "docGhiFile.cpp"
 #include "erom.h"
 
-//check cos tk chua
-bool check(std::string& name_login,std::string& pass_login);
 
+// std::string& name_login,std::string& pass_login
+
+//check cos tk chua
+bool check();
 // tao tk or dang nhap
-std::string loginTK(std::string& name_login,std::string& pass_login);
+std::string loginTK();
 // nhập thông tin tk
 void nhap();
-std::string name_login;
-std::string pass_login;
+
 
 std::string login(){
 	//nhap name + pass
 	dangNhapLai:
-	nhap(name_login,pass_login);
+	nhap();
 	// kiem tra
 	
 	//tao tk or login
 	//tra lai so diem
-	return loginTK(name_login,pass_login);
+	return loginTK();
 }
-void nhap(std::string& name_login,std::string& pass_login){
-	getline(std::cin,name_login);
-	getline(std::cin,pass_login);
+void nhap(){
+	getline(std::cin,arr_login[0]);
+	getline(std::cin,arr_login[1]);
 }
-std::string loginTK(std::string& name_login,std::string& pass_login){
+std::string loginTK(){
 	
-	
-	if (check(name_login,pass_login))
+	bool a=check();
+	if (a==1)
 	{
-		name=name_login;
-		pass=pass_login;
+		arr[1]=arr_login[0];
+		arr[2]=arr_login[1];
 		//return diemMax
 
 	}
@@ -51,8 +52,8 @@ std::string loginTK(std::string& name_login,std::string& pass_login){
 		if (ktr=='Y'||ktr=='y')
 		{
 			//khoi tao tk
-			name=name_login;
-			pass=pass_login;
+			arr[1]=arr_login[0];
+			arr[2]=arr_login[1];
 			diemmax="0";
 			//luu thong tin name,pass,diemmax;
 			return diemmax;
@@ -66,9 +67,9 @@ std::string loginTK(std::string& name_login,std::string& pass_login){
 	
 }
 
-bool check(std::string& name_login,std::string& pass_login){
+bool check(){
     //check excel xem co tk chua
-	std::string KQcheck=checkTrongFile(name_login,pass_login);
+	std::string KQcheck=checkTrongFile();
     if (KQcheck=="MK_SAI")
     {
         return false;
@@ -77,7 +78,7 @@ bool check(std::string& name_login,std::string& pass_login){
 	{
 		return false;
 	}
-    return 1;
+    return true;
     
 }
 

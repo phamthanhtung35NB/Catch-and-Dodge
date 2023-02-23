@@ -15,9 +15,12 @@
 
 // const int SCREEN_WIDTH = 1000;
 // const int SCREEN_HEIGHT = 1000;
-std::string name;
-std::string pass;
-std::string diemmax;
+extern std::string name_login;
+extern std::string diemmax;
+extern std::string pass_login;
+
+std::string arr_login[3];
+std::string arr[4];
 int main( int argc, char* args[] )
 {
     diemmax=login();
