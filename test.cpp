@@ -23,9 +23,9 @@ SDL_Surface* gALL = NULL;
 SDL_Surface* gBackground = NULL;
 SDL_Surface* gNhanVatLeft = NULL;
 SDL_Surface* gNhanVatRight = NULL;
-SDL_Rect toaDo;
-toaDo.x = 500;
-toaDo.y = 580;
+SDL_Rect characterRect;
+characterRect.x = 500;
+characterRect.y = 580;
 int main( int argc, char* args[] )
 {
 	// Start up SDL and create window
@@ -60,23 +60,23 @@ int main( int argc, char* args[] )
 						switch (e.key.keysym.sym)
 						{
 						case SDLK_UP:
-							toaDo.y -= 10;
+							characterRect.y -= 10;
 							break;
 						case SDLK_DOWN:
-							toaDo.y += 10;
+							characterRect.y += 10;
 							break;
 						case SDLK_LEFT:
-							toaDo.x -= 10;
+							characterRect.x -= 10;
 							break;
 						case SDLK_RIGHT:
-							toaDo.x += 10;
+							characterRect.x += 10;
 							break;
 						}
 					}
                 }
 				//Apply the gBackground image
 				SDL_BlitSurface(gBackground, NULL, gALL, NULL);
-				SDL_BlitSurface(gNhanVatLeft, NULL, gALL, &toaDo);
+				SDL_BlitSurface(gNhanVatLeft, NULL, gALL, &characterRect);
 
 				//Update the surface
 				SDL_UpdateWindowSurface(gWindow);
