@@ -1,10 +1,12 @@
+#pragma once
+
 #ifndef erom_H
 #define erom_H
 
 extern std::string name_login;
 extern std::string diemmax;
 extern std::string arr_login[3];
-extern std::string arr[4];
+extern std::string arr[4];//hien thi luc chơi
 // arr[0]=so thu to
 // arr[1]=name
 // arr[2]=pass

@@ -1,17 +1,4 @@
-
-#include <string>
-#include <iostream>
-#include <SDL2/SDL.h>
 #include <ctime>
-#include <SDL2/SDL_image.h>
-const int SCREEN_WIDTH = 1000;
-const int SCREEN_HEIGHT = 1000;
-
-//random diem sẽ +
-int ramdomDiemA();
-//random diểm trượt (trừ điểm)
-int randomTruot(const int& x,const int& y);
-
 
 int randomTruot(const int& x,const int& y){
     //rand ()%(b -a+ 1)+a;    [a,b]
@@ -23,6 +10,11 @@ int ramdomDiemA(){
     srand(time(NULL));
     return rand()%1000;
 }
-void start(){
+
+int main(){
+    khung();
+    //khoiTao();
+    system("pause");
+    return 0;
     
 }
