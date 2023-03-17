@@ -5,7 +5,7 @@
 #include <SDL2/SDL_image.h>
 #include <iostream>
 #include <ctime>
-const int SCREEN_WIDTH = 1500;//1850;//rộng
+const int SCREEN_WIDTH = 1850;//1850;//rộng
 const int SCREEN_HEIGHT = 1000;
 bool init();
 bool loadMedia();
@@ -31,22 +31,22 @@ SDL_Surface* gALL = NULL;
 SDL_Surface* gBackground = NULL;
 SDL_Surface* gNhanVatLeft = NULL;
 SDL_Surface* gNhanVatRight = NULL;
-SDL_Surface* garr16Surface1=NULL;
-SDL_Surface* garr16Surface2=NULL;
-SDL_Surface* garr16Surface3=NULL;
-SDL_Surface* garr16Surface4=NULL;
-SDL_Surface* garr16Surface5=NULL;
-SDL_Surface* garr16Surface6=NULL;
-SDL_Surface* garr16Surface7=NULL;
-SDL_Surface* garr16Surface8=NULL;
-SDL_Surface* garr16Surface9=NULL;
-SDL_Surface* garr16Surface10=NULL;
-SDL_Surface* garr16Surface11=NULL;
-SDL_Surface* garr16Surface12=NULL;
-SDL_Surface* garr16Surface13=NULL;
-SDL_Surface* garr16Surface14=NULL;
-SDL_Surface* garr16Surface15=NULL;
-SDL_Surface* garr16Surface16=NULL;
+// SDL_Surface* garr16Surface1=NULL;
+// SDL_Surface* garr16Surface2=NULL;
+// SDL_Surface* garr16Surface3=NULL;
+// SDL_Surface* garr16Surface4=NULL;
+// SDL_Surface* garr16Surface5=NULL;
+// SDL_Surface* garr16Surface6=NULL;
+// SDL_Surface* garr16Surface7=NULL;
+// SDL_Surface* garr16Surface8=NULL;
+// SDL_Surface* garr16Surface9=NULL;
+// SDL_Surface* garr16Surface10=NULL;
+// SDL_Surface* garr16Surface11=NULL;
+// SDL_Surface* garr16Surface12=NULL;
+// SDL_Surface* garr16Surface13=NULL;
+// SDL_Surface* garr16Surface14=NULL;
+// SDL_Surface* garr16Surface15=NULL;
+// SDL_Surface* garr16Surface16=NULL;
 int main( int argc, char* args[] )
 {
 	if( !init() )
@@ -181,8 +181,8 @@ bool init()
 	}
 	else
 	{
-		//Create window
-		gWindow = SDL_CreateWindow( "game", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN );
+		//Create window   SDL_WINDOW_SHOWN,SDL_WINDOW_FULLSCREEN_DESKTOP 
+		gWindow = SDL_CreateWindow( "game", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT,SDL_WINDOW_SHOWN );
 		if( gWindow == NULL )
 		{
 			std::cout<<( "Window could not be created! SDL_Error:\n", SDL_GetError() );
@@ -203,7 +203,7 @@ bool loadMedia()
 	bool check = true;
 
 	// gBackground
-	gBackground = IMG_Load( "data/Background.jpg" );
+	gBackground = IMG_Load( "data/Backgroundfull.png" );
 	if( gBackground == NULL )
 	{
 		std::cout<<( "Khong load duoc anh Background.\n");
