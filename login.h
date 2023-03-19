@@ -13,7 +13,20 @@
 #include <windows.h>
 // #include "docGhiFile.cpp"
 // #include "erom.h"
-bool init();
-bool load();
-void close();
+class login {
+public:
+    Game();
+    ~Game();
+    bool init();
+    bool load();
+    void close();
+
+    static SDL_Renderer * renderer;
+private:
+    bool isRunning;
+    SDL_Window * window;
+    SDL_Rect rectPosition;
+    
+};
+
 #endif

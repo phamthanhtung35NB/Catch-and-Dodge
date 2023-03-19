@@ -19,14 +19,14 @@ TTF_Font* font = NULL;
 SDL_Renderer* nhaptk = NULL;
 // SDL_Renderer* gRenderer = NULL;
 
-
+SDL_Surface* buttonSurface=NULL;
 SDL_Surface* tenDangNhap = NULL;
 SDL_Surface* matkhau =NULL;
 SDL_Surface* login =NULL;
 SDL_Rect ToadoTenDangNhap;
 SDL_Rect ToadoMatKhau;
 SDL_Rect ToadoLogin;
-			
+SDL_Rect buttonLogin = {1097, 702, 200, 30 };;
 // std::string line, name_, pass_,diem_,stt_;
 
 bool init(){
@@ -49,12 +49,42 @@ bool init(){
 
     // Tạo bề mặt của cửa sổ
     gALL = SDL_GetWindowSurface(gwindow);
+    // Tạo renderer
 	nhaptk = SDL_CreateRenderer(gwindow, -1, SDL_RENDERER_ACCELERATED);
 
     if (nhaptk == NULL) {
         check== false;
     }
 	//SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+	return check;
+}
+bool load(){
+	bool check = true;
+	gBackground = IMG_Load( "data/backgrounlogin.png" );
+	if( gBackground == NULL )
+	{
+		std::cout<<( "Khong load duoc anh Background.\n");
+		check = false;
+	}
+
+    // Tạo font chữ
+	font = TTF_OpenFont("data/3Dumb.ttf", 48);
+    // font = TTF_OpenFont("path/to/font.ttf", 48);
+    if (font == NULL) {
+        printf("Failed to load font! SDL_ttf Error: %s\n", TTF_GetError());
+        check = false;
+    }
+    buttonSurface = IMG_Load("data/xacnhan.png");
+    
+    // Tạo bề mặt văn bản
+    // SDL_Color textColor = { };
+	matkhau = TTF_RenderText_Solid(font,"Password", {0, 225, 255 });
+    tenDangNhap = TTF_RenderText_Solid(font, "User Name", {0, 225, 255 });
+	login = TTF_RenderText_Solid(font, "Login", {0, 225, 255 });
+    if (tenDangNhap == NULL||matkhau== NULL) {
+        printf("Failed to render text surface! SDL_ttf Error: %s\n", TTF_GetError());
+        check = false;
+    }
 	return check;
 }
 void gameLoop()
@@ -88,115 +118,83 @@ void gameLoop()
 			SDL_BlitSurface(login, NULL, gALL,&ToadoLogin);
 			SDL_UpdateWindowSurface(gwindow);
 
-			// // Chờ 2 giây
 			// SDL_Delay(2000);
-
-			// // Di chuyển văn bản xuống dưới màn hình
-			
 			// 	// Xóa văn bản khỏi màn hình
 			// SDL_FillRect(gALL, &ToadoTenDangNhap, SDL_MapRGB(gALL->format, 0, 0, 0));
+            while (!quit)
+            {
+                while (SDL_PollEvent(&e) != 0)
+                {
+                    if (e.type == SDL_QUIT) {
+                        quit = true;
+                    }
+                    
+                    if (e.type == SDL_MOUSEBUTTONDOWN) {
+                        int mouseX = e.button.x;
+                        int mouseY = e.button.y;
+                        if (mouseX >= buttonLogin.x && mouseX < buttonLogin.x + buttonLogin.w && mouseY >= buttonLogin.y && mouseY < buttonLogin.y + buttonLogin.h) {
+                            SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Thông báo", "Đăng nhập thành công!", gwindow);
+                        }
+                    }
+                    SDL_BlitSurface(gBackground, NULL, gALL, NULL);
+                    // Hiển thị văn bản trên màn hình
+                    SDL_BlitSurface(tenDangNhap, NULL, gALL, &ToadoTenDangNhap);
+                    SDL_BlitSurface(matkhau, NULL, gALL,&ToadoMatKhau);
+                    // SDL_BlitSurface(login, NULL, gALL,&ToadoLogin);
+                    SDL_BlitSurface(buttonSurface, NULL, gALL, &buttonLogin);
+                    SDL_BlitSurface(login, NULL, gALL,&ToadoLogin);
+                    SDL_UpdateWindowSurface(gwindow);
+                    
+                    // if (e.type == SDL_QUIT)
+                    // {
+                    //     quit = true;
+                    // }
+                    // else if (e.type == SDL_MOUSEBUTTONDOWN)
+                    // {
+                    //     if (e.button.button == SDL_BUTTON_LEFT)
+                    //     {
+                    //         mouseLeftDown = true;
+                    //     }
+                    // }
+                    // else if (e.type == SDL_MOUSEBUTTONUP)
+                    // {
+                    //     if (e.button.button == SDL_BUTTON_LEFT)
+                    //     {
+                    //         mouseLeftDown = false;
+                    //     }
+                    // }
+                    else if (e.type == SDL_MOUSEMOTION)
+                    {
+                        mouseX = e.motion.x;
+                        mouseY = e.motion.y;
+                        std::cout<<mouseX<<" "<<mouseY<<"\n";
+                    }
+                                    // // Xử lý các thao tác chuột
+                    // if (mouseLeftDown)
+                    // {
+                    //     // Khi nhấn chuột trái
+                    // }
+                    // else
+                    // {
+                    //     // Khi thả chuột trái
+                    // }
+                    
+                    // Cập nhật và vẽ hình ảnh của game
+                    // SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
+                    // SDL_RenderClear(gRenderer);
+                        // Vẽ hình ảnh game tại đây
+                    
+                //      SDL_RenderPresent(gRenderer);
+                }
+                
 
-			// // Cập nhật vị trí mới của văn bản
-			
-			// 	SDL_BlitSurface(gBackground, NULL, gALL, NULL);
-			// 	// Hiển thị văn bản mới trên màn hình
-			// 	SDL_BlitSurface(tenDangNhap, NULL, gALL, &ToadoTenDangNhap);
-			// 	SDL_UpdateWindowSurface(gwindow);
-			
-
-
-
-
-	while (!quit)
-    {
-        while (SDL_PollEvent(&e) != 0)
-        {
-			if (e.type == SDL_QUIT) {
-                quit = true;
             }
-			SDL_BlitSurface(gBackground, NULL, gALL, NULL);
-			// Hiển thị văn bản trên màn hình
-			SDL_BlitSurface(tenDangNhap, NULL, gALL, &ToadoTenDangNhap);
-			SDL_BlitSurface(matkhau, NULL, gALL,&ToadoMatKhau);
-			SDL_BlitSurface(login, NULL, gALL,&ToadoLogin);
-			SDL_UpdateWindowSurface(gwindow);
-			
-            // if (e.type == SDL_QUIT)
-            // {
-            //     quit = true;
-            // }
-            // else if (e.type == SDL_MOUSEBUTTONDOWN)
-            // {
-            //     if (e.button.button == SDL_BUTTON_LEFT)
-            //     {
-            //         mouseLeftDown = true;
-            //     }
-            // }
-            // else if (e.type == SDL_MOUSEBUTTONUP)
-            // {
-            //     if (e.button.button == SDL_BUTTON_LEFT)
-            //     {
-            //         mouseLeftDown = false;
-            //     }
-            // }
-            // else if (e.type == SDL_MOUSEMOTION)
-            // {
-                mouseX = e.motion.x;
-                mouseY = e.motion.y;
-				std::cout<<mouseX<<" "<<mouseY<<"\n";
-            // }
-        }
-        
-        // // Xử lý các thao tác chuột
-        // if (mouseLeftDown)
-        // {
-        //     // Khi nhấn chuột trái
-        // }
-        // else
-        // {
-        //     // Khi thả chuột trái
-        // }
-        
-        // Cập nhật và vẽ hình ảnh của game
-       // SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
-       // SDL_RenderClear(gRenderer);
-        // Vẽ hình ảnh game tại đây
-        
-     //    SDL_RenderPresent(gRenderer);
-}
 		}
 
 	}
-    }
-
-bool load(){
-	bool check = true;
-	gBackground = IMG_Load( "data/backgrounlogin.png" );
-	if( gBackground == NULL )
-	{
-		std::cout<<( "Khong load duoc anh Background.\n");
-		check = false;
-	}
-
-    // Tạo font chữ
-	font = TTF_OpenFont("data/3Dumb.ttf", 48);
-    // font = TTF_OpenFont("path/to/font.ttf", 48);
-    if (font == NULL) {
-        printf("Failed to load font! SDL_ttf Error: %s\n", TTF_GetError());
-        check = false;
-    }
-
-    // Tạo bề mặt văn bản
-    // SDL_Color textColor = { };
-	matkhau = TTF_RenderText_Solid(font,"Password", {0, 225, 255 });
-    tenDangNhap = TTF_RenderText_Solid(font, "User Name", {0, 225, 255 });
-	login = TTF_RenderText_Solid(font, "Login", {0, 225, 255 });
-    if (tenDangNhap == NULL||matkhau== NULL) {
-        printf("Failed to render text surface! SDL_ttf Error: %s\n", TTF_GetError());
-        check = false;
-    }
-	return check;
 }
+
+
 SDL_Texture* createTextTexture(SDL_Renderer* renderer, TTF_Font* font, const std::string& text, SDL_Color textColor) {
     SDL_Surface* surface = TTF_RenderText_Solid(font, text.c_str(), textColor);
     SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
@@ -213,7 +211,7 @@ void close()
     SDL_DestroyWindow(gwindow);
     TTF_Quit();
     SDL_Quit();
-
+}
 
 	// //Deallocate surface
 	// SDL_FreeSurface( gBackground );
@@ -231,7 +229,7 @@ void close()
 
 	// //Quit SDL subsystems
 	// SDL_Quit();
-}
+// }
 
 /* std::string checkTrongFile(){
     std::ifstream file_data("data/dataLuuTam.txt");
@@ -290,76 +288,6 @@ void updateFile()
     }
     // đóng file
     outfile2.close();
-}
-void taoTK(){
-    std::ofstream outfileTaoTK("data/dataLuuTam.txt", std::ios::app);
-    outfileTaoTK << arr[0] << " " << arr[1] << " " << arr[2] << " " << arr[3] << std::endl;
-    // đóng file
-    outfileTaoTK.close();
-}
-
-std::string login(){
-	//nhap name + pass
-	dangNhapLai:
-	nhap();
-	// kiem tra
-	
-	//tao tk or login
-	//tra lai so diem
-	return loginTK();
-}
-void nhap(){
-	getline(std::cin,arr_login[0]);
-	getline(std::cin,arr_login[1]);
-}
-std::string loginTK(){
-	
-	bool a=check();
-	if (a==1)
-	{
-		arr[1]=arr_login[0];
-		arr[2]=arr_login[1];
-		//return diemMax
-
-	}
-	else
-	{
-		//chuwa cos tk
-		char ktr='n';
-		// chon dang nhap lai
-
-		// lap tk moi 
-		if (ktr=='Y'||ktr=='y')
-		{
-			//khoi tao tk
-			arr[1]=arr_login[0];
-			arr[2]=arr_login[1];
-			diemmax="0";
-			//luu thong tin name,pass,diemmax;
-			return diemmax;
-		}
-		else
-		{
-			std::goto dangNhapLai;
-			//ra dang nhap lai
-		}
-	}
-	
-}
-
-bool check(){
-    //check excel xem co tk chua
-	std::string KQcheck=checkTrongFile();
-    if (KQcheck=="MK_SAI")
-    {
-        return false;
-    }
-	else if (KQcheck=="CHUA_CO")
-	{
-		return false;
-	}
-    return true;
-    
 }
 */
 

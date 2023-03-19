@@ -11,6 +11,6 @@
 // std::string arr[4];
 int main( int argc, char* args[] )
 {
-    int n=main();
+    ;
     return 0;
 }

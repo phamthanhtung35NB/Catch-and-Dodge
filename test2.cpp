@@ -3,10 +3,10 @@
 int main(int argc, char* argv[]) {
     SDL_Init(SDL_INIT_VIDEO);
 
-    SDL_Window* window = SDL_CreateWindow("Login", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, SDL_WINDOW_SHOWN);
-    SDL_Surface* surface = SDL_GetWindowSurface(window);
+    //SDL_Window* window = SDL_CreateWindow("Login", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, SDL_WINDOW_SHOWN);
+    //SDL_Surface* surface = SDL_GetWindowSurface(window);
 
-    SDL_Surface* buttonSurface = IMG_Load("data/xacnhan.png");
+    // SDL_Surface* buttonSurface = IMG_Load("data/xacnhan.png");
     SDL_Rect buttonRect = {100, 100, 200, 30 };
     SDL_BlitSurface(buttonSurface, NULL, surface, &buttonRect);
 
