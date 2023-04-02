@@ -1,15 +1,17 @@
 #include <SDL2/SDL.h>
-#include <cstdio>
-#include<iostream>
-#include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 #include <string>
-char* input = new char[100];
-std::string text;
+
 int main(int argc, char* argv[]) {
     // Khởi tạo SDL
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         printf("Không thể khởi tạo SDL: %s\n", SDL_GetError());
+        return 1;
+    }
+
+    // Khởi tạo SDL_ttf
+    if (TTF_Init() < 0) {
+        printf("Không thể khởi tạo SDL_ttf: %s\n", TTF_GetError());
         return 1;
     }
 
@@ -27,132 +29,132 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    // Load ảnh nền
-    SDL_Surface* backgroundSurface = IMG_Load("background.jpg");
-    if (backgroundSurface == NULL) {
-        printf("Không thể load ảnh nền: %s\n", SDL_GetError());
-        return 1;
-    }
-
-    // Chuyển đổi ảnh nền thành texture
-    SDL_Texture* backgroundTexture = SDL_CreateTextureFromSurface(renderer, backgroundSurface);
-    if (backgroundTexture == NULL) {
-        printf("Không thể tạo texture: %s\n", SDL_GetError());
-        return 1;
-    }
-
-    // Xoá ảnh nền từ bộ nhớ
-    SDL_FreeSurface(backgroundSurface);
-
-    // Tạo font chữ
-    TTF_Font* font = TTF_OpenFont("arial.ttf", 28);
+    // Load font
+    TTF_Font* font = TTF_OpenFont("data/arial.ttf", 24);
     if (font == NULL) {
-        printf("Không thể tạo font chữ: %s\n", SDL_GetError());
+        printf("Không thể load font: %s\n", TTF_GetError());
         return 1;
     }
 
-    // Tạo màu chữ
-    SDL_Color textColor = { 255, 255, 255 };
+    // Tạo surface và texture cho các vùng nhập liệu
+    SDL_Surface* usernameSurface = TTF_RenderText_Solid(font, "Tên đăng nhập:", {255, 255, 255});
+    SDL_Surface* passwordSurface = TTF_RenderText_Solid(font, "Mật khẩu:", {255, 255, 255});
+    SDL_Texture* usernameTexture = SDL_CreateTextureFromSurface(renderer, usernameSurface);
+    SDL_Texture* passwordTexture = SDL_CreateTextureFromSurface(renderer, passwordSurface);
 
-    // Tạo ô nhập tài khoản
-    SDL_Rect accountInputRect = { 240, 200, 200, 40 };
-    SDL_Surface* accountInputSurface = SDL_CreateRGBSurface(0, accountInputRect.w, accountInputRect.h, 32, 0, 0, 0, 0);
-    SDL_FillRect(accountInputSurface, NULL, SDL_MapRGB(accountInputSurface->format, 0, 0, 0));
-    SDL_Texture* accountInputTexture = SDL_CreateTextureFromSurface(renderer, accountInputSurface);
-    SDL_FreeSurface(accountInputSurface);
+    SDL_Surface* usernameInputSurface ;
+    SDL_Surface* passwordInputSurface ;
+    SDL_Texture* usernameInputTexture ;
+    SDL_Texture* passwordInputTexture ;
+    SDL_Rect usernameInputRect ;
+    SDL_Rect passwordInputRect ;
 
-    // Tạo ô nhập mật khẩu
-    SDL_Rect passwordInputRect = { 240, 250, 200, 40 };
-    SDL_Surface* passwordInputSurface = SDL_CreateRGBSurface(0, passwordInputRect.w, passwordInputRect.h, 32, 0, 0, 0, 0);
-    SDL_FillRect(passwordInputSurface, NULL,  SDL_MapRGB(passwordInputSurface->format, 0, 0, 0));
-    //SDL_FillRect(passwordInputSurface, NULL, SDL_MapRGB(passwordInputSurface->format, 0, 0, 0));
-    SDL_Texture* passwordInputTexture = SDL_CreateTextureFromSurface(renderer, passwordInputSurface);
-    SDL_FreeSurface(passwordInputSurface);
-    // Vòng lặp game
+    // Xoá surface từ bộ nhớ
+    // SDL_FreeSurface(usernameSurface);
+    // SDL_FreeSurface(passwordSurface);
+
+    // Vị trí của các vùng nhập liệu
+    SDL_Rect usernameRect = {100, 200, 200, 30};
+    SDL_Rect passwordRect = {100, 250, 200, 30};
+
+    // Dữ liệu đang nhập vào các vùng nhập liệu
+    std::string username = "";
+    std::string password = "";
+
+    // Vòng lặp chính
     bool quit = false;
+    SDL_Event event;
     while (!quit) {
         // Xử lý sự kiện
-        SDL_Event event;
-        while (SDL_PollEvent(&event)) {
-            switch (event.type) {
-                case SDL_QUIT:
-                    quit = true;
-                    break;
-                case SDL_KEYDOWN:
-                    // Xử lý phím nhấn
-                    switch (event.key.keysym.sym) {
-                        case SDLK_RETURN:
-                            // Xử lý đăng nhập
-                            std::string account = ""; // Lưu tên đăng nhập
-                            std::string password = ""; // Lưu mật khẩu
-                            // Lấy thông tin từ ô nhập tài khoản
-                            char* accountInput = new char[100];
-                            SDL_SetTextInputRect(accountInput, 100);
-                            // SDL_SetTextInputRect(accountInput, sizeof(accountInput));
-                            account = accountInput;
-                            delete[] accountInput;
-                            // Lấy thông tin từ ô nhập mật khẩu
-                            char* passwordInput = new char[100];
-                            SDL_SetTextInputRect(passwordInput, 100);
-                            password = passwordInput;
-                            delete[] passwordInput;
-                            // Kiểm tra thông tin đăng nhập
-                            if (account == "admin" && password == "123456") {
-                                printf("Đăng nhập thành công\n");
-                            } else {
-                                printf("Đăng nhập thất bại\n");
-                            }
-                            break;
-                        default:
-                            break;
-                    }
-                    break;
-                case SDL_TEXTINPUT:
-                    // Xử lý nhập liệu từ bàn phím
-                    SDL_Rect inputRect;
-                    if (SDL_HasIntersection(&event.edit.selection, &accountInputRect)) {
-                        inputRect = accountInputRect;
-                    } else if (SDL_HasIntersection(&event.edit.selection, &passwordInputRect)) {
-                        inputRect = passwordInputRect;
-                    } else {
-                        break;
-                    }
-
-
-                    SDL_SetTextInputRect(input, 100);
-                    text = input;
-                    delete[] input;
-                    SDL_Surface* surface = TTF_RenderText_Solid(font, text.c_str(), textColor);
-                    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
-                    SDL_FreeSurface(surface);
-                    SDL_RenderCopy(renderer, texture, NULL, &inputRect);
-                    SDL_DestroyTexture(texture);
-                    break;
-                default:
-                    break;
+        while (SDL_PollEvent(&event) != 0) {
+            if (event.type == SDL_QUIT) {
+                quit = true;
             }
-        }
+            if (event.type == SDL_TEXTINPUT) {
+                // Nếu có sự kiện nhập liệu
+                if (usernameRect.x <= event.text.text[0] && event.text.text[0] <= usernameRect.x + usernameRect.w &&
+                    usernameRect.y <= event.text.text[1] && event.text.text[1] <= usernameRect.y + usernameRect.h) {
+                    username += event.text.text;
+                } else if (passwordRect.x <= event.text.text[0] && event.text.text[0] <= passwordRect.x + passwordRect.w &&
+                    passwordRect.y <= event.text.text[1] && event.text.text[1] <= passwordRect.y + passwordRect.h) {
+                    password += event.text.text;
+                }
+            }
+            else if (event.type == SDL_KEYDOWN) {
+                // Nếu có sự kiện ấn phím
+                if (event.key.keysym.sym == SDLK_BACKSPACE) {
+                    // Nếu ấn phím backspace, xóa ký tự cuối cùng của dữ liệu đang nhập
+                    if (!username.empty() &&
+                        (usernameRect.x <= event.text.text[0] && event.text.text[0] <= usernameRect.x + usernameRect.w &&
+                            usernameRect.y <= event.text.text[1] && event.text.text[1] <= usernameRect.y + usernameRect.h)) {
+                        username.pop_back();
+                    } else if (!password.empty() &&
+                        (passwordRect.x <= event.text.text[0] && event.text.text[0] <= passwordRect.x + passwordRect.w &&
+                            passwordRect.y <= event.text.text[1] && event.text.text[1] <= passwordRect.y + passwordRect.h)) {
+                        password.pop_back();
+                    }
+                }
+            }
+        // }
+        // Xoá toàn bộ renderer
+        SDL_RenderClear(renderer);
 
-        // Vẽ ảnh nền
-        SDL_RenderCopy(renderer, backgroundTexture, NULL, NULL);
 
-        // Vẽ ô nhập tài khoản
-        SDL_RenderCopy(renderer, accountInputTexture, NULL, &accountInputRect);
+        SDL_RenderCopy(renderer, usernameTexture, NULL, &usernameRect);
+        SDL_RenderCopy(renderer, passwordTexture, NULL, &passwordRect);
 
-        // Vẽ ô nhập mật khẩu
+
+        // Vẽ dữ liệu đang nhập lên renderer
+        usernameInputSurface = TTF_RenderText_Solid(font, username.c_str(), {255, 255, 255});
+        passwordInputSurface = TTF_RenderText_Solid(font, password.c_str(), {255, 255, 255});
+        usernameInputTexture = SDL_CreateTextureFromSurface(renderer, usernameInputSurface);
+        passwordInputTexture = SDL_CreateTextureFromSurface(renderer, passwordInputSurface);
+        usernameInputRect = {300, 200, usernameInputSurface->w, usernameInputSurface->h};
+        passwordInputRect = {300, 250, passwordInputSurface->w, passwordInputSurface->h};
+        SDL_RenderCopy(renderer, usernameInputTexture, NULL, &usernameInputRect);
         SDL_RenderCopy(renderer, passwordInputTexture, NULL, &passwordInputRect);
+       
+        SDL_FreeSurface(usernameSurface);
+        SDL_FreeSurface(passwordSurface);
+        SDL_DestroyTexture(usernameTexture);
+        SDL_DestroyTexture(passwordTexture);
 
-        // Hiển thị lên màn hình
+        // Vẽ renderer ra màn hình
         SDL_RenderPresent(renderer);
-    }
+        SDL_UpdateWindowSurface(window);
+        // Chờ 16ms để cho frame tiếp theo
+        // SDL_Delay(166);
 
-    // Giải phóng bộ nhớ và thoát
-    SDL_DestroyTexture(backgroundTexture);
-    SDL_DestroyTexture(accountInputTexture);
-    SDL_DestroyTexture(passwordInputTexture);
+
+        // // Vẽ các vùng nhập liệu lên renderer
+        // SDL_RenderCopy(renderer, usernameTexture, NULL, &usernameRect);
+        // SDL_RenderCopy(renderer, passwordTexture, NULL, &passwordRect);
+
+        // // Vẽ dữ liệu đang nhập lên renderer
+        // SDL_Surface* usernameInputSurface = TTF_RenderText_Solid(font, username.c_str(), {255, 255, 255});
+        // SDL_Surface* passwordInputSurface = TTF_RenderText_Solid(font, password.c_str(), {255, 255, 255});
+        // SDL_Texture* usernameInputTexture = SDL_CreateTextureFromSurface(renderer, usernameInputSurface);
+        // SDL_Texture* passwordInputTexture = SDL_CreateTextureFromSurface(renderer, passwordInputSurface);
+        // SDL_Rect usernameInputRect = {300, 200, usernameInputSurface->w, usernameInputSurface->h};
+        // SDL_Rect passwordInputRect = {300, 250, passwordInputSurface->w, passwordInputSurface->h};
+        // SDL_RenderCopy(renderer, usernameInputTexture, NULL, &usernameInputRect);
+        // SDL_RenderCopy(renderer, passwordInputTexture, NULL, &passwordInputRect);
+        // SDL_FreeSurface(usernameInputSurface);
+        // SDL_FreeSurface(passwordInputSurface);
+        // SDL_DestroyTexture(usernameInputTexture);
+        // SDL_DestroyTexture(passwordInputTexture);
+
+        // // Vẽ renderer lên cửa sổ
+        // SDL_RenderPresent(renderer);
+        }
+    }
+    // Giải phóng tài nguyên,các resource đã sử dụng
+    SDL_DestroyTexture(usernameTexture);
+    SDL_DestroyTexture(passwordTexture);
+    TTF_CloseFont(font);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
-    TTF_CloseFont(font);
+    TTF_Quit();
     SDL_Quit();
     return 0;
 }

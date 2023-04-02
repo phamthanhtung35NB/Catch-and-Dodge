@@ -1,1 +1,7 @@
-tung 123123 100
+cout
+cin
+std
+string
+int
+float
+double
