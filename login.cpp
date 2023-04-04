@@ -1,4 +1,4 @@
-#include"login.h"
+
 //check cos tk chua
 // bool check();
 // tao tk or dang nhap
