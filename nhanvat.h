@@ -20,12 +20,11 @@ public:
     //khỏi tạo
     nhanvat(SDL_Surface* gALL, const char* path, int x, int y);
     ~nhanvat();
-    void updateBeMat(SDL_Surface* surfaceLink);
+    void updateBeMat(SDL_Surface* gALL);
     void updateToado(int x);
     int returnToaDoXY();
     // int randomDiemA();
     // int randomTruot();
-    ~nhanvat();
 };
 
 

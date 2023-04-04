@@ -1,11 +1,11 @@
 // #include "erom.h"
-#include "vatpham.h"
+// #include "vatpham.h"
 #include"nhanvat.h"
 // #include <windows.h>
 // #include <string>
 // #include <SDL2/SDL.h>
 // #include <SDL2/SDL_image.h>
-// #include <iostream>
+#include <iostream>
 // #include <ctime>
 const int SCREEN_WIDTH = 1850;//1850;//rộng
 const int SCREEN_HEIGHT = 1000;
@@ -33,7 +33,7 @@ int main( int argc, char* args[] )
 	gWindow = SDL_CreateWindow( "game", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT,SDL_WINDOW_SHOWN );
 	if( gWindow == NULL ){std::cout<<( "Window could not be created! SDL_Error:\n", SDL_GetError() );}
     gALL = SDL_GetWindowSurface( gWindow );
-    nhanvat gBackground(gALL,"data/Backgroundfull.png",NULL,NULL);
+    nhanvat gBackground(gALL,"data/Backgroundfull.png",0,0);
     nhanvat gNhanVatLeft(gALL,"data/Left.png",750,580);
     nhanvat gNhanVatRight(gALL,"data/Right.png",750,580);
     bool huongDiTrai=true;  //true sang trái
@@ -55,7 +55,7 @@ int main( int argc, char* args[] )
                     if (huongDiTrai==false)
                     {
                         huongDiTrai=true;
-                        gNhanVatLeft.updateToado(gNhanVatLeft.returnToaDoXY+=328);
+                        gNhanVatLeft.updateToado(gNhanVatLeft.returnToaDoXY()+328);
                         // ToaDo.x += 335;
                     }
                     break;
@@ -64,7 +64,7 @@ int main( int argc, char* args[] )
                     if (huongDiTrai==true)
                     {
                         huongDiTrai=false;
-                        gNhanVatRight.updateToado(gNhanVatRight.returnToaDoXY-=328);
+                        gNhanVatRight.updateToado(gNhanVatRight.returnToaDoXY()-328);
                     }
                     // else if (huongDiTrai==true&&ToaDo.x==0)
                     // {
@@ -77,10 +77,10 @@ int main( int argc, char* args[] )
                 default:
                     if (huongDiTrai==true)
                     {
-                        gNhanVatRight.updateToado(gNhanVatRight.returnToaDoXY-=1);
+                        gNhanVatRight.updateToado(gNhanVatRight.returnToaDoXY()-1);
                     }
                     else{
-                        gNhanVatLeft.updateToado(gNhanVatLeft.returnToaDoXY+=1);
+                        gNhanVatLeft.updateToado(gNhanVatLeft.returnToaDoXY()+1);
                     }
                 }
                 
@@ -92,16 +92,19 @@ int main( int argc, char* args[] )
                 
                 // std::cout <<ToaDo.x<<" "<<ToaDo.y<<" "<<huongDiTrai<<"\n";
 				//Apply the gBackground image
-				SDL_BlitSurface(gBackground, NULL, gALL, NULL);
+				// SDL_BlitSurface(gBackground, NULL, gALL, NULL);
+                gBackground.updateBeMat(gALL);
                 // trái
 				if (huongDiTrai==true)
                 {
-                    SDL_BlitSurface(gNhanVatLeft, NULL, gALL, &ToaDo);
+                    gNhanVatLeft.updateBeMat(gALL);
+                    // SDL_BlitSurface(gNhanVatLeft, NULL, gALL, &ToaDo);
                 }
                 // phải
                 else if (huongDiTrai==false)
                 {
-                    SDL_BlitSurface(gNhanVatRight, NULL, gALL, &ToaDo);
+                    gNhanVatRight.updateBeMat(gALL);
+                    // SDL_BlitSurface(gNhanVatRight, NULL, gALL, gNhanVatRight.ToaDo);
 
                 }
 				// Cập nhật

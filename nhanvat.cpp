@@ -1,6 +1,6 @@
 #include"nhanvat.h"
 
-void nhanvat::updateBeMat(SDL_Surface* surfaceLink,SDL_Surface * gALL){
+void nhanvat::updateBeMat(SDL_Surface * gALL){
     SDL_BlitSurface(surfaceLink, NULL, gALL, &ToaDo);
 }
 nhanvat::nhanvat(SDL_Surface* ALL, const char* path,int x, int y)
