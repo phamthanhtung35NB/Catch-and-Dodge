@@ -51,6 +51,7 @@ nhanvat::nhanvat(SDL_Surface* gALL, const char* path,int x, int y)
     this->ToaDo.x = x;
     this->ToaDo.y = y;
 }
+///
 nhanvat::nhanvat(){
     this->surfaceLink = NULL;
     this->ToaDo.x = 0;
