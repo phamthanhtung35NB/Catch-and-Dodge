@@ -9,6 +9,8 @@
 #include <fstream>
 #include <vector>
 #include <windows.h>
+#include <cstdlib>
+#include<time.h>
 class Text {
 public:
     Text();
@@ -39,8 +41,11 @@ public:
     nhanvat(SDL_Surface* gALL, const char* path, int x, int y);
     ~nhanvat();
     void updateBeMat(SDL_Surface* gALL);
-    void updateToado(int x);
+    void updateToadoX(int x);
     int returnToaDoX();
+    int returnToaDoY();
+    void updateToaDoY(int y);
+    // int (int y);
 };
 
 #endif // KHOITAO_H_

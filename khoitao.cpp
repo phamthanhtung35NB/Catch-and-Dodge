@@ -66,6 +66,12 @@ nhanvat::~nhanvat()
 int nhanvat::returnToaDoX(){
     return ToaDo.x;
 }
-void nhanvat::updateToado(int x){
+void nhanvat::updateToadoX(int x){
     ToaDo.x=x;
+}
+int nhanvat::returnToaDoY(){
+    return ToaDo.y;
+}
+void nhanvat::updateToaDoY(int y){
+    ToaDo.y=y;
 }
