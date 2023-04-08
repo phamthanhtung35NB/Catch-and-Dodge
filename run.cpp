@@ -10,7 +10,7 @@ const int pxDichChuyen = 5;
 SDL_Window* gWindow = NULL;
 SDL_Surface* gALL = NULL;
 
-
+double timecu=0;
 
 
 
@@ -101,7 +101,13 @@ int main( int argc, char* args[] )
             }
             NhanVatRight.updateBeMat(gALL);
         }
-        int x=randomTruot()*10;
+        double x=ranDom();
+        while (x==timecu)
+        {
+            x=ranDom();
+        }
+        timecu=x;
+        std::cout<<x<<std::endl;
             bia.updateToadoX(x);
             bia.updateToaDoY(bia.returnToaDoY()+1);
             if (bia.returnToaDoY()>1000)
@@ -120,9 +126,9 @@ int main( int argc, char* args[] )
     // Cập nhật
     SDL_UpdateWindowSurface(gWindow);
     SDL_FillRect(gALL, NULL, SDL_MapRGB(gALL->format, 0x00, 0x00, 0x00));
-
+    SDL_Delay(50);
     }
-	// close();
+	// close();100/3
 	return 0;
 }
 

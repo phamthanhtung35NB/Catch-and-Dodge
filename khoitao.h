@@ -11,6 +11,7 @@
 #include <windows.h>
 #include <cstdlib>
 #include<time.h>
+
 class Text {
 public:
     Text();
@@ -47,5 +48,5 @@ public:
     void updateToaDoY(int y);
     // int (int y);
 };
-
+double ranDom();
 #endif // KHOITAO_H_

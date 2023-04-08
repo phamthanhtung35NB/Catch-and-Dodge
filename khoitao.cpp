@@ -70,12 +70,31 @@ int nhanvat::returnToaDoX(){
 void nhanvat::updateToadoX(int x){
     ToaDo.x=x;
 }
-<<<<<<< HEAD
+// <<<<<<< HEAD
 int nhanvat::returnToaDoY(){
     return ToaDo.y;
 }
 void nhanvat::updateToaDoY(int y){
     ToaDo.y=y;
 }
-=======
->>>>>>> 1b59e5bcb19d414b98793d8edfee7cea54582d29
+// =======
+// >>>>>>> 1b59e5bcb19d414b98793d8edfee7cea54582d29
+
+double ranDom(){
+    //rand ()%(b -a+ 1)+a;    [a,b]
+    // clock_t start, end;   // Khai báo biến thời gian
+    // double time_use;      // Thời gian sử dụng
+    // start = clock();  
+    // end = clock();  // lấy thời gian sau khi thực hiện 
+    double timesau=clock()%10;
+    if (timesau<5)
+    {   
+        int timez=clock()%100;
+        while (timez>15||timez==0)
+        {
+           timez=clock()%100;
+        }
+        return timez*100;
+    }else
+    return timesau*100;
+}

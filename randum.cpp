@@ -1,24 +1,24 @@
 #include <iostream>
 #include <random>
+#include<time.h>
+#include <windows.h>
+
 #include <ctime>
 using namespace std;
-
+int timecu=0;
 // #include <random>
 
 // Hàm trả về một số ngẫu nhiên trong khoảng [min, max]
-int random(int min, int max)
-{
-    srand(time(NULL));
-    std::random_device rd;  // Thiết bị tạo số ngẫu nhiên
-    std::mt19937 gen(rd()); // Một trình tạo số ngẫu nhiên dựa trên seed
-    std::uniform_int_distribution<> dis(min, max); // Phân phối đều trên khoảng [min, max]
 
-    return dis(gen); // Trả về một số ngẫu nhiên trong khoảng [min, max]
-}
 
 
 int main() {
-    int rand_num = random(1,100);
-    cout << "A random number rounded to the nearest hundred: " << rand_num << endl;
+    for (int i = 0; i < 200; i++)
+    {
+    // cout << "Một số ngẫu nhiên được làm tròn đến hàng trăm gần nhất: 
+    cout<< random() << endl;
+        Sleep(1000);
+    }
+    
     return 0;
 }
