@@ -20,7 +20,7 @@ public:
     void updateBeMatText(SDL_Surface* gALL);
     void updateToadoY(int y);
     int returnToaDoY() ;
-    void updateToadoX(int X);
+    void updateToaDoX(int X);
     int returnToaDoX() ;
     // int randomDiemA();
     // int randomTruot();
@@ -42,11 +42,24 @@ public:
     nhanvat(SDL_Surface* gALL, const char* path, int x, int y);
     ~nhanvat();
     void updateBeMat(SDL_Surface* gALL);
-    void updateToadoX(int x);
+    void updateToaDoX(int x);
     int returnToaDoX();
     int returnToaDoY();
     void updateToaDoY(int y);
     // int (int y);
 };
+
+class khongchevatpham
+{
+private:
+    int soLuong;
+    bool arrTrueFalse[5];
+public:
+    khongchevatpham(int& soLuong,bool arrTrueFalse[]);
+    ~khongchevatpham();
+};
+
+
 double ranDom();
+
 #endif // KHOITAO_H_

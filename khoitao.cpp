@@ -79,6 +79,21 @@ void nhanvat::updateToaDoY(int y){
 }
 // =======
 // >>>>>>> 1b59e5bcb19d414b98793d8edfee7cea54582d29
+///////////////////////////////////////////////////////////
+
+khongchevatpham::khongchevatpham(int so,bool arrTrueFalse[])
+{
+    soLuong=so;
+    for (int i = 0; i < 5; i++)
+    {
+    arrTrueFalse[i]=false
+    }
+}
+
+khongchevatpham::~khongchevatpham()
+{
+}
+
 
 double ranDom(){
     //rand ()%(b -a+ 1)+a;    [a,b]

@@ -3,37 +3,42 @@
 
 const int SCREEN_WIDTH = 1850;//1850;//rộng
 const int SCREEN_HEIGHT = 1000;
-std::vector<std::string> lineVecToTrue={};
-std::vector<std::string> lineVecToFalse={};
 const int pxDichChuyen = 5;
 // cua so win
 SDL_Window* gWindow = NULL;
 SDL_Surface* gALL = NULL;
 
 double timecu=0;
+std::ifstream infile("dataLuuTam.txt");
+std::vector<std::string> lineVecToTrue={};
+std::vector<std::string> lineVecToFalse={};
 
 
+// int randomTruot(){
+//     //rand ()%(b -a+ 1)+a;    [a,b]
+//     clock_t start, end;   // Khai báo biến thời gian
+//     double time_use;      // Thời gian sử dụng
+//     start = clock();  
+//     end = clock();  // lấy thời gian sau khi thực hiện 
+//     time_use = (double)(end - start) / CLOCKS_PER_SEC; 
+//     int ran;
+//     srand(time(0));
+//     ran=rand ()%(100)+5;
+//     return ran;
+// }
 
-int randomTruot(){
-    //rand ()%(b -a+ 1)+a;    [a,b]
-    clock_t start, end;   // Khai báo biến thời gian
-    double time_use;      // Thời gian sử dụng
-    start = clock();  
-    end = clock();  // lấy thời gian sau khi thực hiện 
-    time_use = (double)(end - start) / CLOCKS_PER_SEC; 
-    int ran;
-    srand(time(0));
-    ran=rand ()%(100)+5;
-    return ran;
-}
-int main( int argc, char* args[] )
-{
+bool init(){
     if( SDL_Init( SDL_INIT_VIDEO ) < 0 ){std::cout<<"SDL_ERROR: \n"<<SDL_GetError();}
 	TTF_Init();
     gWindow = SDL_CreateWindow( "Game", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT,SDL_WINDOW_SHOWN );
 	if( gWindow == NULL ){std::cout<<( "Window could not be created! SDL_Error:\n", SDL_GetError() );}
     gALL = SDL_GetWindowSurface( gWindow );
-    std::ifstream infile("dataLuuTam.txt");
+
+}
+
+
+int main( int argc, char* args[] )
+{
     nhanvat bia(gALL,"bianho.png",0,0);
     nhanvat gBackground(gALL,"data/Backgroundfull.png",0,0);
     nhanvat NhanVatLeft(gALL,"data/Left.png",750,580);
@@ -67,19 +72,19 @@ int main( int argc, char* args[] )
             else if(e.key.keysym.sym== SDLK_LEFT){
                 if (huongDiTrai==false){
                     huongDiTrai=true;
-                    NhanVatLeft.updateToadoX(NhanVatRight.returnToaDoX()+330);
+                    NhanVatLeft.updateToaDoX(NhanVatRight.returnToaDoX()+330);
                 }
                 else{
-                NhanVatLeft.updateToadoX(NhanVatLeft.returnToaDoX()-pxDichChuyen);
+                NhanVatLeft.updateToaDoX(NhanVatLeft.returnToaDoX()-pxDichChuyen);
                 }
             }
             else if(e.key.keysym.sym==SDLK_RIGHT){
                 if (huongDiTrai==true){
                     huongDiTrai=false;
-                    NhanVatRight.updateToadoX(NhanVatLeft.returnToaDoX()-330);
+                    NhanVatRight.updateToaDoX(NhanVatLeft.returnToaDoX()-330);
                 }
                 else{
-                    NhanVatRight.updateToadoX(NhanVatRight.returnToaDoX()+pxDichChuyen);
+                    NhanVatRight.updateToaDoX(NhanVatRight.returnToaDoX()+pxDichChuyen);
                 }
             }
         }
@@ -97,7 +102,7 @@ int main( int argc, char* args[] )
             // NhanVatRight.updateToado(NhanVatRight.returnToaDoX()+2);
             if (NhanVatRight.returnToaDoX()>1180)
             {
-                NhanVatRight.updateToadoX(1180);
+                NhanVatRight.updateToaDoX(1180);
             }
             NhanVatRight.updateBeMat(gALL);
         }
@@ -108,7 +113,7 @@ int main( int argc, char* args[] )
         }
         timecu=x;
         std::cout<<x<<std::endl;
-            bia.updateToadoX(x);
+            bia.updateToaDoX(x);
             bia.updateToaDoY(bia.returnToaDoY()+1);
             if (bia.returnToaDoY()>1000)
             {
@@ -150,15 +155,4 @@ int main( int argc, char* args[] )
 
 // 	//Quit SDL subsystems
 // 	SDL_Quit();
-// }
-
-
-// int randomDiemA(){
-//     srand(time(NULL));
-//     return rand()%1000;
-// }
-
-// int randomTruot()
-// {
-//     return 0;
 // }
