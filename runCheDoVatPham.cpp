@@ -35,6 +35,11 @@ bool init(){
         return false;
     }
     gALL = SDL_GetWindowSurface( gWindow );
+    int imgFlags = IMG_INIT_PNG;
+            if (!(IMG_Init(imgFlags) & imgFlags)){
+                printf("SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError());
+                return false;
+            }
     return true;
 }
 
@@ -55,10 +60,17 @@ int main( int argc, char* args[] )
         nhanvat(gALL,"bianho.png",0,0),
         nhanvat(gALL,"bianho.png",0,0)
     };
-    nhanvat gBackgroundphu(gALL,"nenphu.png",1500,0);
+    SDL_Rect toadotamthoi{100,600};
+    SDL_Rect sizeCat;
+        sizeCat.x = 0;
+        sizeCat.y = 0;
+        sizeCat.w = 300;
+        sizeCat.h = 300;
+        // SDL_Surface* nhanvatll=IMG_Load("nhanvatRnho.png");
+    // nhanvat gBackgroundphu(gALL,"nenphu.png",1500,0);
     nhanvat gBackground(gALL,"anhnenchuan.png",0,0);
-    nhanvat NhanVatLeft(gALL,"data/Left.png",750,580);
-    nhanvat NhanVatRight(gALL,"data/Right.png",750,580);
+    nhanvat NhanVatLeft(gALL,"nhanvatLnho.png",750,600);
+    nhanvat NhanVatRight(gALL,"nhanvatRnho.png",750,600);
     bool huongDiTrai=true;  //true sang trái
                             //false sang phải
     SDL_Event e;
@@ -71,13 +83,13 @@ int main( int argc, char* args[] )
     // {
     //     x=ranDom();
     // }
-    SDL_Delay(1207);
-    timecu=x;
-    std::cout<<x;
+
     bia[0].updateToaDoX(x);
     
     while (quit == false)
     {
+        // Xóa màn hình
+            SDL_FillRect(gALL, NULL, SDL_MapRGB(gALL->format, 0xFF, 0xFF, 0xFF));
         while (SDL_PollEvent(&e))
         // if (SDL_PollEvent(&e))
         {
@@ -86,7 +98,7 @@ int main( int argc, char* args[] )
             else if(e.key.keysym.sym== SDLK_LEFT){
                 if (huongDiTrai==false){
                     huongDiTrai=true;
-                    NhanVatLeft.updateToaDoX(NhanVatRight.returnToaDoX()+330);
+                    NhanVatLeft.updateToaDoX(NhanVatRight.returnToaDoX()+30);
                 }
                 else{
                 NhanVatLeft.updateToaDoX(NhanVatLeft.returnToaDoX()-pxDichChuyen);
@@ -95,21 +107,22 @@ int main( int argc, char* args[] )
             else if(e.key.keysym.sym==SDLK_RIGHT){
                 if (huongDiTrai==true){
                     huongDiTrai=false;
-                    NhanVatRight.updateToaDoX(NhanVatLeft.returnToaDoX()-330);
+                    NhanVatRight.updateToaDoX(NhanVatLeft.returnToaDoX()-30);
                 }
                 else{
                     NhanVatRight.updateToaDoX(NhanVatRight.returnToaDoX()+pxDichChuyen);
+                    // SDL_BlitSurface(nhanvatll, NULL, gALL, &{100,100});
                 }
             }
         }
         //Apply the gBackground image
-        gBackgroundphu.updateBeMat(gALL);
+        // gBackgroundphu.updateBeMat(gALL);
         gBackground.updateBeMat(gALL);
         // trái
         if (huongDiTrai==true)
         {
             // NhanVatLeft.updateToado(NhanVatLeft.returnToaDoX()-2);
-            NhanVatLeft.updateBeMat(gALL);
+            NhanVatLeft.updateBeMat(gALL,sizeCat);
         }
         // phải
         else if (huongDiTrai==false)
@@ -119,32 +132,50 @@ int main( int argc, char* args[] )
             {
                 NhanVatRight.updateToaDoX(1180);
             }
-            NhanVatRight.updateBeMat(gALL);
+            NhanVatRight.updateBeMat(gALL,sizeCat);
+
         }
-        if (((NhanVatLeft.returnToaDoX()==bia[0].returnToaDoX()) && (bia[0].returnToaDoY()<800))||((NhanVatRight.returnToaDoX()==bia[0].returnToaDoX()) && (bia[0].returnToaDoY()<800)))
+        if ((NhanVatLeft.returnToaDoX()+100<=bia[0].returnToaDoX()&&(NhanVatLeft.returnToaDoX()+200>=bia[0].returnToaDoX())) && ((bia[0].returnToaDoY()<900)&&(bia[0].returnToaDoY()>600))||
+        (NhanVatRight.returnToaDoX()+100<=bia[0].returnToaDoX()&&(NhanVatRight.returnToaDoX()+200>=bia[0].returnToaDoX())) && ((bia[0].returnToaDoY()<900)&&(bia[0].returnToaDoY()>600)))
         {
             bia[0].updateToaDoX(ranDom());
             bia[0].updateToaDoY(1);
         }
         
-    if (bia[0].returnToaDoY()>1000)
-    {
-        bia[0].updateToaDoX(ranDom());
-        bia[0].updateToaDoY(1);
-    }
-        bia[0].updateToaDoY(bia[0].returnToaDoY()+1);
+        if (bia[0].returnToaDoY()>1000)
+        {
+            int x=ranDom();
+                std::cout<<x;
+            bia[0].updateToaDoX(x);
+            bia[0].updateToaDoY(1);
+        }
+        bia[0].updateToaDoY(bia[0].returnToaDoY()+2);
         
         
         for (int i = 0; i < 5; i++)
         {   
-            bia[i].updateBeMat(gALL);
+            bia[0].updateBeMat(gALL);
+        }
+        // SDL_BlitSurface(nhanvatll, &sizeCat, gALL,&toadotamthoi);
+        clock_t timemoi= clock();
+        if (timemoi-timecu>100)
+        {
+            sizeCat.x += 300;
+            timecu=timemoi;
         }
         
+        
+        
+
+        if (sizeCat.x >= 1800){
+            sizeCat.x = 0;
+            
+        }
 
     // Cập nhật
     SDL_UpdateWindowSurface(gWindow);
     SDL_FillRect(gALL, NULL, SDL_MapRGB(gALL->format, 0x00, 0x00, 0x00));
-    // SDL_Delay(50);
+    SDL_Delay(10);
     }
 	// close();100/3
 	return 0;

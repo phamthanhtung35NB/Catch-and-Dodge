@@ -9,6 +9,11 @@ const int SCREEN_WIDTH = 1040;
 const int SCREEN_HEIGHT = 1080;
 SDL_Surface* textSurface =NULL;
 TTF_Font* font=NULL;
+SDL_Rect spriteRect;
+        spriteRect.x = 0;
+        spriteRect.y = 0;
+        spriteRect.w = 735;
+        spriteRect.h = 735;
 int main(int argc, char* argv[])
 {
                 lai:

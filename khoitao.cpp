@@ -41,7 +41,12 @@ int Text::returnToaDoX(){
 }
 ///////////////////////////////////////////////////////////////////////////////////////
 void nhanvat::updateBeMat(SDL_Surface * gALL){
+    //surface nguồn.// vùng cần sao chép trên surface nguồn.//surface đích.//vùng cần vẽ trên surface đích.
     SDL_BlitSurface(surfaceLink, NULL, gALL, &ToaDo);
+}
+void nhanvat::updateBeMat(SDL_Surface * gALL,SDL_Rect &sizeCat){
+    //surface nguồn.// vùng cần sao chép trên surface nguồn.//surface đích.//vùng cần vẽ trên surface đích.
+    SDL_BlitSurface(surfaceLink, &sizeCat, gALL, &ToaDo);
 }
 nhanvat::nhanvat(SDL_Surface* gALL, const char* path,int x, int y)
 {
@@ -50,6 +55,16 @@ nhanvat::nhanvat(SDL_Surface* gALL, const char* path,int x, int y)
     this->surfaceLink = IMG_Load(path);
     this->ToaDo.x = x;
     this->ToaDo.y = y;
+}
+nhanvat::nhanvat(SDL_Surface* gALL, const char* path,int x, int y,int w,int h)
+{
+    SDL_Init( SDL_INIT_VIDEO );
+    // load link
+    this->surfaceLink = IMG_Load(path);
+    this->ToaDo.x = x;
+    this->ToaDo.y = y;
+    this->ToaDo.w = w;
+    this->ToaDo.h = h;
 }
 ///
 nhanvat::nhanvat(){
@@ -94,10 +109,10 @@ double ranDom(){
     // if (timesau<5)
     // {   
     //     int timez=clock()%100;
-    //     while (timez>15||timez==0)
-    //     {
-    //        timez=clock()%100;
-    //     }
+    //     // while (timez>15||timez==0)
+    //     // {
+    //     //    timez=clock()%100;
+    //     // }
     //     return timez*100;
     // }else
     return timesau*100;

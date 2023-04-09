@@ -40,8 +40,10 @@ public:
     nhanvat();
     //khỏi tạo
     nhanvat(SDL_Surface* gALL, const char* path, int x, int y);
+    nhanvat(SDL_Surface* gALL, const char* path,int x, int y,int w,int h);
     ~nhanvat();
     void updateBeMat(SDL_Surface* gALL);
+    void updateBeMat(SDL_Surface* gALL,SDL_Rect &sizeCat);
     void updateToaDoX(int x);
     int returnToaDoX();
     int returnToaDoY();
