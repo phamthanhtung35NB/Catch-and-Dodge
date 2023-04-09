@@ -3,7 +3,7 @@
 
 const int SCREEN_WIDTH = 1850;//1850;//rộng
 const int SCREEN_HEIGHT = 1000;
-const int pxDichChuyen = 5;
+const int pxDichChuyen = 10;
 // cua so win
 SDL_Window* gWindow = NULL;
 SDL_Surface* gALL = NULL;
@@ -12,60 +12,74 @@ double timecu=0;
 std::ifstream infile("dataLuuTam.txt");
 std::vector<std::string> lineVecToTrue={};
 std::vector<std::string> lineVecToFalse={};
-
-
-// int randomTruot(){
-//     //rand ()%(b -a+ 1)+a;    [a,b]
-//     clock_t start, end;   // Khai báo biến thời gian
-//     double time_use;      // Thời gian sử dụng
-//     start = clock();  
-//     end = clock();  // lấy thời gian sau khi thực hiện 
-//     time_use = (double)(end - start) / CLOCKS_PER_SEC; 
-//     int ran;
-//     srand(time(0));
-//     ran=rand ()%(100)+5;
-//     return ran;
-// }
-
+int soLuong;//số lượng vật phẩm đang có trên màn hình
+bool arrTrueFalse[5]{
+    arrTrueFalse[0]=false,
+    arrTrueFalse[1]=false,
+    arrTrueFalse[2]=false,
+    arrTrueFalse[3]=false,
+    arrTrueFalse[4]=false
+};//vvật phẩm nài còn trên màn hình
 bool init(){
-    if( SDL_Init( SDL_INIT_VIDEO ) < 0 ){std::cout<<"SDL_ERROR: \n"<<SDL_GetError();}
-	TTF_Init();
+    if( SDL_Init( SDL_INIT_VIDEO ) < 0 ){
+        std::cout<<"SDL_ERROR: \n"<<SDL_GetError();
+        return false;
+    }
+	if (TTF_Init()<0)
+    {
+        return false;
+    }
     gWindow = SDL_CreateWindow( "Game", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT,SDL_WINDOW_SHOWN );
-	if( gWindow == NULL ){std::cout<<( "Window could not be created! SDL_Error:\n", SDL_GetError() );}
+	if( gWindow == NULL ){
+        std::cout<<( "Window could not be created! SDL_Error:\n", SDL_GetError() );
+        return false;
+    }
     gALL = SDL_GetWindowSurface( gWindow );
-
+    return true;
 }
 
+void khongCheVatPham(){
+}
 
 int main( int argc, char* args[] )
 {
-    nhanvat bia(gALL,"bianho.png",0,0);
-    nhanvat gBackground(gALL,"data/Backgroundfull.png",0,0);
+    if (!init())
+    {
+        std::cout<<"khong the khoi tao.";   
+        return 1;
+    }
+    nhanvat bia[5]{
+        nhanvat(gALL,"bom.png",0,0),
+        nhanvat(gALL,"bianho.png",0,0),
+        nhanvat(gALL,"bianho.png",0,0),
+        nhanvat(gALL,"bianho.png",0,0),
+        nhanvat(gALL,"bianho.png",0,0)
+    };
+    nhanvat gBackgroundphu(gALL,"nenphu.png",1500,0);
+    nhanvat gBackground(gALL,"anhnenchuan.png",0,0);
     nhanvat NhanVatLeft(gALL,"data/Left.png",750,580);
     nhanvat NhanVatRight(gALL,"data/Right.png",750,580);
     bool huongDiTrai=true;  //true sang trái
                             //false sang phải
     SDL_Event e;
     bool quit = false;
-    int soLuong=0;
-    if(infile.is_open()){
-        std::string line;
-        while (getline(infile, line)) {
-            lineVecToTrue.push_back(line);
-            soLuong++;
-        }
-    }
-    std::cout<<soLuong;
     // Xóa bộ đệm hiển thị
     // SDL_FillRect(ga, NULL, SDL_MapRGB(textSurface->format, 0x00, 0x00, 0x00));
-    Text textTrue1(gALL, "data/arial.ttf", 55, lineVecToTrue[0].c_str(),  { 255, 0, 0 },  100, 1);
-    // Text textTrue2(gALL, "data/arial.ttf", 55, lineVecToTrue[2].c_str(),  { 0, 255, 0 },  400, 522);
-    // Text textTrue3(gALL, "data/arial.ttf", 55,lineVecToTrue[3].c_str(),  { 0, 0, 255 },  600, 522);
-    // Text textFalse1(gALL, "data/arial.ttf", 55, lineVecToTrue[4].c_str(),  { 255, 255, 255 },  700, 522);
+
+    double x=ranDom();
+    // while (x==timecu)
+    // {
+    //     x=ranDom();
+    // }
+    SDL_Delay(1207);
+    timecu=x;
+    std::cout<<x;
+    bia[0].updateToaDoX(x);
+    
     while (quit == false)
     {
-        // while (SDL_PollEvent(&e))
-        if (SDL_PollEvent(&e))
+        while (SDL_PollEvent(&e))
+        // if (SDL_PollEvent(&e))
         {
             
             if (e.type == SDL_QUIT)quit = true;
@@ -89,6 +103,7 @@ int main( int argc, char* args[] )
             }
         }
         //Apply the gBackground image
+        gBackgroundphu.updateBeMat(gALL);
         gBackground.updateBeMat(gALL);
         // trái
         if (huongDiTrai==true)
@@ -106,32 +121,30 @@ int main( int argc, char* args[] )
             }
             NhanVatRight.updateBeMat(gALL);
         }
-        double x=ranDom();
-        while (x==timecu)
+        if (((NhanVatLeft.returnToaDoX()==bia[0].returnToaDoX()) && (bia[0].returnToaDoY()<800))||((NhanVatRight.returnToaDoX()==bia[0].returnToaDoX()) && (bia[0].returnToaDoY()<800)))
         {
-            x=ranDom();
+            bia[0].updateToaDoX(ranDom());
+            bia[0].updateToaDoY(1);
         }
-        timecu=x;
-        std::cout<<x<<std::endl;
-            bia.updateToaDoX(x);
-            bia.updateToaDoY(bia.returnToaDoY()+1);
-            if (bia.returnToaDoY()>1000)
-            {
-                bia.updateToaDoY(1);
-            }
-            // std::cout<<bia.returnToaDoY;
-            
-    // Xóa bộ đệm hiển thị
-    // 
-    bia.updateBeMat(gALL);
-    textTrue1.updateBeMatText(gALL);
-    // textTrue2.updateBeMatText(gALL);
-    // textTrue3.updateBeMatText(gALL);
-    // textFalse1.updateBeMatText(gALL);
+        
+    if (bia[0].returnToaDoY()>1000)
+    {
+        bia[0].updateToaDoX(ranDom());
+        bia[0].updateToaDoY(1);
+    }
+        bia[0].updateToaDoY(bia[0].returnToaDoY()+1);
+        
+        
+        for (int i = 0; i < 5; i++)
+        {   
+            bia[i].updateBeMat(gALL);
+        }
+        
+
     // Cập nhật
     SDL_UpdateWindowSurface(gWindow);
     SDL_FillRect(gALL, NULL, SDL_MapRGB(gALL->format, 0x00, 0x00, 0x00));
-    SDL_Delay(50);
+    // SDL_Delay(50);
     }
 	// close();100/3
 	return 0;

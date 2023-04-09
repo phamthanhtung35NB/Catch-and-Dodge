@@ -27,13 +27,13 @@ Text::~Text() {
 void Text::updateBeMatText(SDL_Surface* gALL) {
     SDL_BlitSurface(surfaceLinkText, NULL, gALL, &ToaDo);
 }
-void Text::updateToadoY(int y){
+void Text::updateToaDoY(int y){
     ToaDo.y=y;
 }
 int Text::returnToaDoY(){
     return ToaDo.y;
 }
-void Text::updateToadoX(int x){
+void Text::updateToaDoX(int x){
     ToaDo.x=x;
 }
 int Text::returnToaDoX(){
@@ -67,7 +67,7 @@ nhanvat::~nhanvat()
 int nhanvat::returnToaDoX(){
     return ToaDo.x;
 }
-void nhanvat::updateToadoX(int x){
+void nhanvat::updateToaDoX(int x){
     ToaDo.x=x;
 }
 // <<<<<<< HEAD
@@ -81,18 +81,7 @@ void nhanvat::updateToaDoY(int y){
 // >>>>>>> 1b59e5bcb19d414b98793d8edfee7cea54582d29
 ///////////////////////////////////////////////////////////
 
-khongchevatpham::khongchevatpham(int so,bool arrTrueFalse[])
-{
-    soLuong=so;
-    for (int i = 0; i < 5; i++)
-    {
-    arrTrueFalse[i]=false
-    }
-}
 
-khongchevatpham::~khongchevatpham()
-{
-}
 
 
 double ranDom(){
@@ -102,14 +91,14 @@ double ranDom(){
     // start = clock();  
     // end = clock();  // lấy thời gian sau khi thực hiện 
     double timesau=clock()%10;
-    if (timesau<5)
-    {   
-        int timez=clock()%100;
-        while (timez>15||timez==0)
-        {
-           timez=clock()%100;
-        }
-        return timez*100;
-    }else
+    // if (timesau<5)
+    // {   
+    //     int timez=clock()%100;
+    //     while (timez>15||timez==0)
+    //     {
+    //        timez=clock()%100;
+    //     }
+    //     return timez*100;
+    // }else
     return timesau*100;
 }

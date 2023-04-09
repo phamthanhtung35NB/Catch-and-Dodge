@@ -18,8 +18,8 @@ public:
     Text(SDL_Surface* gALL, const char* font_path, int font_size, const char* message, SDL_Color color, int x, int y);
     ~Text();
     void updateBeMatText(SDL_Surface* gALL);
-    void updateToadoY(int y);
-    int returnToaDoY() ;
+    void updateToaDoY(int y);
+    int returnToaDoY();
     void updateToaDoX(int X);
     int returnToaDoX() ;
     // int randomDiemA();
@@ -49,15 +49,6 @@ public:
     // int (int y);
 };
 
-class khongchevatpham
-{
-private:
-    int soLuong;
-    bool arrTrueFalse[5];
-public:
-    khongchevatpham(int& soLuong,bool arrTrueFalse[]);
-    ~khongchevatpham();
-};
 
 
 double ranDom();
