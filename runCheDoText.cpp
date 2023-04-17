@@ -33,7 +33,7 @@ bool init(){
     gWindow = SDL_CreateWindow( "Game", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT,SDL_WINDOW_SHOWN );
 	if( gWindow == NULL ){std::cout<<( "Window could not be created! SDL_Error:\n", SDL_GetError() );}
     gALL = SDL_GetWindowSurface( gWindow );
-
+return true;
 }
 
 
@@ -43,7 +43,7 @@ int main( int argc, char* args[] )
     nhanvat gBackground(gALL,"data/Backgroundfull.png",0,0);
     nhanvat NhanVatLeft(gALL,"data/Left.png",750,580);
     nhanvat NhanVatRight(gALL,"data/Right.png",750,580);
-    bool huongDiTrai=true;  //true sang trái
+    bool huongDiTrai=true;  //true sang tráib
                             //false sang phải
     SDL_Event e;
     bool quit = false;

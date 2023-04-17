@@ -11,13 +11,14 @@
 #include <windows.h>
 #include <cstdlib>
 #include<time.h>
-
+#include <string>
 class Text {
 public:
     Text();
     Text(SDL_Surface* gALL, const char* font_path, int font_size, const char* message, SDL_Color color, int x, int y);
     ~Text();
     void updateBeMatText(SDL_Surface* gALL);
+    void updateBeMatText(SDL_Surface* gALL,const char* message, SDL_Color color);
     void updateToaDoY(int y);
     int returnToaDoY();
     void updateToaDoX(int X);

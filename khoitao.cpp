@@ -27,6 +27,9 @@ Text::~Text() {
 void Text::updateBeMatText(SDL_Surface* gALL) {
     SDL_BlitSurface(surfaceLinkText, NULL, gALL, &ToaDo);
 }
+void Text::updateBeMatText(SDL_Surface* gALL,const char* message, SDL_Color color) {
+    SDL_BlitSurface(TTF_RenderText_Solid(font, message, color), NULL, gALL, &ToaDo);
+}
 void Text::updateToaDoY(int y){
     ToaDo.y=y;
 }
@@ -40,6 +43,9 @@ int Text::returnToaDoX(){
     return ToaDo.x;
 }
 ///////////////////////////////////////////////////////////////////////////////////////
+
+
+
 void nhanvat::updateBeMat(SDL_Surface * gALL){
     //surface nguồn.// vùng cần sao chép trên surface nguồn.//surface đích.//vùng cần vẽ trên surface đích.
     SDL_BlitSurface(surfaceLink, NULL, gALL, &ToaDo);

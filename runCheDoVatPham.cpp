@@ -1,25 +1,16 @@
 #include"khoitao.h"
 
-
 const int SCREEN_WIDTH = 1850;//1850;//rộng
 const int SCREEN_HEIGHT = 1000;
-const int pxDichChuyen = 10;
+const int pxDichChuyen = 15;
 // cua so win
 SDL_Window* gWindow = NULL;
 SDL_Surface* gALL = NULL;
 
-double timecu=0;
-std::ifstream infile("dataLuuTam.txt");
-std::vector<std::string> lineVecToTrue={};
-std::vector<std::string> lineVecToFalse={};
-int soLuong;//số lượng vật phẩm đang có trên màn hình
-bool arrTrueFalse[5]{
-    arrTrueFalse[0]=false,
-    arrTrueFalse[1]=false,
-    arrTrueFalse[2]=false,
-    arrTrueFalse[3]=false,
-    arrTrueFalse[4]=false
-};//vvật phẩm nài còn trên màn hình
+double timecu,timeXuatHien=0;
+int soLuong=0;//số lượng vật phẩm đang có trên màn hình
+int tocDoRoi=1;
+bool arrTrueFalse[5]{false,false,false,false,false};//vvật phẩm nài còn trên màn hình
 bool init(){
     if( SDL_Init( SDL_INIT_VIDEO ) < 0 ){
         std::cout<<"SDL_ERROR: \n"<<SDL_GetError();
@@ -43,24 +34,49 @@ bool init(){
     return true;
 }
 
-void khongCheVatPham(){
+
+
+std::string intToString(int num) {
+    std::string result = "";
+    bool isNegative = false;
+
+    // xử lý số âm
+    if (num < 0) {
+        isNegative = true;
+        num = -num;
+    }
+
+    // chuyển đổi từng chữ số thành ký tự tương ứng
+    do {
+        char digit = '0' + (num % 10);
+        result = digit + result;
+        num /= 10;
+    } while (num > 0);
+
+    // xử lý trường hợp số âm
+    if (isNegative) {
+        result = '-' + result;
+    }
+
+    return result;
 }
 
 int main( int argc, char* args[] )
 {
+    long diem=0;
     if (!init())
     {
         std::cout<<"khong the khoi tao.";   
         return 1;
     }
     nhanvat bia[5]{
-        nhanvat(gALL,"bom.png",0,0),
         nhanvat(gALL,"bianho.png",0,0),
-        nhanvat(gALL,"bianho.png",0,0),
-        nhanvat(gALL,"bianho.png",0,0),
-        nhanvat(gALL,"bianho.png",0,0)
+        nhanvat(gALL,"bianho.png",1850,0),
+        nhanvat(gALL,"bianho.png",1850,0),
+        nhanvat(gALL,"bianho.png",1850,0),
+        nhanvat(gALL,"bianho.png",1850,0)
     };
-    SDL_Rect toadotamthoi{100,600};
+    Text textTrue1(gALL, "data/arial.ttf", 65,  intToString(diem).c_str(),  { 255, 0, 0 },  1600, 600);
     SDL_Rect sizeCat;
         sizeCat.x = 0;
         sizeCat.y = 0;
@@ -78,18 +94,28 @@ int main( int argc, char* args[] )
     // Xóa bộ đệm hiển thị
     // SDL_FillRect(ga, NULL, SDL_MapRGB(textSurface->format, 0x00, 0x00, 0x00));
 
-    double x=ranDom();
-    // while (x==timecu)
-    // {
-    //     x=ranDom();
-    // }
 
-    bia[0].updateToaDoX(x);
     
     while (quit == false)
     {
         // Xóa màn hình
-            SDL_FillRect(gALL, NULL, SDL_MapRGB(gALL->format, 0xFF, 0xFF, 0xFF));
+        // SDL_FillRect(gALL, NULL, SDL_MapRGB(gALL->format, 0xFF, 0xFF, 0xFF));
+
+        if (clock()-timeXuatHien>1000 && soLuong<5&&arrTrueFalse[soLuong]==false)
+        {
+            timeXuatHien=clock();
+            bia[soLuong].updateToaDoX(ranDom());
+            arrTrueFalse[soLuong]=true;
+            // bia[soLuong].updateToaDoX(ranDom());
+            soLuong++;
+        }
+        if (soLuong==5)
+        {
+            soLuong=0;
+        }
+        
+        
+
         while (SDL_PollEvent(&e))
         // if (SDL_PollEvent(&e))
         {
@@ -98,7 +124,7 @@ int main( int argc, char* args[] )
             else if(e.key.keysym.sym== SDLK_LEFT){
                 if (huongDiTrai==false){
                     huongDiTrai=true;
-                    NhanVatLeft.updateToaDoX(NhanVatRight.returnToaDoX()+30);
+                    NhanVatLeft.updateToaDoX(NhanVatRight.returnToaDoX()-100);
                 }
                 else{
                 NhanVatLeft.updateToaDoX(NhanVatLeft.returnToaDoX()-pxDichChuyen);
@@ -107,7 +133,7 @@ int main( int argc, char* args[] )
             else if(e.key.keysym.sym==SDLK_RIGHT){
                 if (huongDiTrai==true){
                     huongDiTrai=false;
-                    NhanVatRight.updateToaDoX(NhanVatLeft.returnToaDoX()-30);
+                    NhanVatRight.updateToaDoX(NhanVatLeft.returnToaDoX()+100);
                 }
                 else{
                     NhanVatRight.updateToaDoX(NhanVatRight.returnToaDoX()+pxDichChuyen);
@@ -135,33 +161,40 @@ int main( int argc, char* args[] )
             NhanVatRight.updateBeMat(gALL,sizeCat);
 
         }
-        if ((NhanVatLeft.returnToaDoX()+100<=bia[0].returnToaDoX()&&(NhanVatLeft.returnToaDoX()+200>=bia[0].returnToaDoX())) && ((bia[0].returnToaDoY()<900)&&(bia[0].returnToaDoY()>600))||
-        (NhanVatRight.returnToaDoX()+100<=bia[0].returnToaDoX()&&(NhanVatRight.returnToaDoX()+200>=bia[0].returnToaDoX())) && ((bia[0].returnToaDoY()<900)&&(bia[0].returnToaDoY()>600)))
+        for (int i = 0; i < 5; i++)
         {
-            bia[0].updateToaDoX(ranDom());
-            bia[0].updateToaDoY(1);
+        if ((NhanVatLeft.returnToaDoX()+100<=bia[i].returnToaDoX()&&(NhanVatLeft.returnToaDoX()+200>=bia[i].returnToaDoX())) && ((bia[i].returnToaDoY()<900)&&(bia[i].returnToaDoY()>600))||
+        (NhanVatRight.returnToaDoX()+100<=bia[i].returnToaDoX()&&(NhanVatRight.returnToaDoX()+200>=bia[i].returnToaDoX())) && ((bia[i].returnToaDoY()<900)&&(bia[i].returnToaDoY()>600)))
+        {
+            // bia[i].updateToaDoX(ranDom());
+            // bia[i].updateToaDoY(1);
+            arrTrueFalse[i]=false;
+            diem+=100;
         }
         
-        if (bia[0].returnToaDoY()>1000)
+        if (bia[i].returnToaDoY()>1000)
         {
             int x=ranDom();
-                std::cout<<x;
-            bia[0].updateToaDoX(x);
-            bia[0].updateToaDoY(1);
+            arrTrueFalse[i]=false;
+            bia[i].updateToaDoX(1900);
+            bia[i].updateToaDoY(1);
         }
-        bia[0].updateToaDoY(bia[0].returnToaDoY()+2);
+            if (arrTrueFalse[i]==true)
+            {
+                bia[i].updateToaDoY(bia[i].returnToaDoY()+tocDoRoi);    
+        // bia[i].updateToaDoY(bia[i].returnToaDoY()+2);
+            }
+        }
         
-        
+        //update vatpham bia
         for (int i = 0; i < 5; i++)
         {   
-            bia[0].updateBeMat(gALL);
+            bia[i].updateBeMat(gALL);
         }
-        // SDL_BlitSurface(nhanvatll, &sizeCat, gALL,&toadotamthoi);
-        clock_t timemoi= clock();
-        if (timemoi-timecu>100)
+        if (clock()-timecu>150)
         {
             sizeCat.x += 300;
-            timecu=timemoi;
+            timecu=clock();
         }
         
         
@@ -171,11 +204,14 @@ int main( int argc, char* args[] )
             sizeCat.x = 0;
             
         }
+        // std::cout<<diem;
+            // Text textTrue1(gALL, "data/arial.ttf", 65,  intToString(diem).c_str(),  { 255, 0, 0 },  1600, 600);
+        textTrue1.updateBeMatText(gALL, intToString(diem).c_str(),{ 255, 0, 0 });
 
     // Cập nhật
     SDL_UpdateWindowSurface(gWindow);
     SDL_FillRect(gALL, NULL, SDL_MapRGB(gALL->format, 0x00, 0x00, 0x00));
-    SDL_Delay(10);
+    SDL_Delay(1);
     }
 	// close();100/3
 	return 0;
