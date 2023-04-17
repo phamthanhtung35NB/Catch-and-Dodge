@@ -122,4 +122,31 @@ double ranDom(){
     //     return timez*100;
     // }else
     return timesau*100;
+
 }
+std::string intToString(int num) {
+    std::string result = "";
+    bool isNegative = false;
+
+    // xử lý số âm
+    if (num < 0) {
+        isNegative = true;
+        num = -num;
+    }
+
+    // chuyển đổi từng chữ số thành ký tự tương ứng
+    do {
+        char digit = '0' + (num % 10);
+        result = digit + result;
+        num /= 10;
+    } while (num > 0);
+
+    // xử lý trường hợp số âm
+    if (isNegative) {
+        result = '-' + result;
+    }
+
+    return result;
+}
+
+

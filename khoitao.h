@@ -53,7 +53,7 @@ public:
 };
 
 
-
+std::string intToString(int num);
 double ranDom();
 
 #endif // KHOITAO_H_
