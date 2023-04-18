@@ -12,6 +12,7 @@
 #include <cstdlib>
 #include<time.h>
 #include <string>
+#include <SDL2/SDL_mixer.h>
 
 // extern int check=5;
 class Text {
