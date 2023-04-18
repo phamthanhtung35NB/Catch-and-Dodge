@@ -1,5 +1,5 @@
 #include"khoitao.h"
-
+// #include "runCheDoVatPham.h"
 const int SCREEN_WIDTH = 1850;//1850;//rộng
 const int SCREEN_HEIGHT = 1000;
 const int pxDichChuyen = 15;
@@ -47,7 +47,8 @@ bool init(){
 
 
 
-int main( int argc, char* args[] )
+// int main( int argc, char* args[] )
+int runCheDoVatPham()
 {
     SDL_Rect sizeCat;
 sizeCat.x = 0;
@@ -104,6 +105,7 @@ sizeCat.h = chieuCaoKhungNhanVat;
         }
         
         
+            keyState = SDL_GetKeyboardState(NULL);
 
         while (SDL_PollEvent(&e))
         // if (SDL_PollEvent(&e))
@@ -129,8 +131,8 @@ sizeCat.h = chieuCaoKhungNhanVat;
             //         // SDL_BlitSurface(nhanvatll, NULL, gALL, &{100,100});
             //     }
             // }
-            keyState = SDL_GetKeyboardState(NULL);
             //phai
+        }
             if(keyState[SDL_SCANCODE_A]||keyState[SDL_SCANCODE_LEFT]){
                 if (checkHoatDong==1){
                     checkHoatDong=3;
@@ -138,7 +140,7 @@ sizeCat.h = chieuCaoKhungNhanVat;
                     if (clock()-timecu>30)
                     {
                         sizeCat.x += 89;
-                        if (sizeCat.x >= 450)sizeCat.x = 0;
+                        if (sizeCat.x >= 430)sizeCat.x = 0;
                         timecu=clock();
                     }
                 }
@@ -147,8 +149,8 @@ sizeCat.h = chieuCaoKhungNhanVat;
                 nhanVatgame.updateToaDoX(nhanVatgame.returnToaDoX()-pxDichChuyen);
                 if (clock()-timecu>30)
                     {
-                        sizeCat.x += 89;
-                        if (sizeCat.x >= 450)sizeCat.x = 0;
+                        sizeCat.x += 87;
+                        if (sizeCat.x >= 430)sizeCat.x = 0;
                         timecu=clock();
                     }
                 }
@@ -162,8 +164,8 @@ sizeCat.h = chieuCaoKhungNhanVat;
                     nhanVatgame.updateToaDoX(nhanVatgame.returnToaDoX()+60);
                     if (clock()-timecu>30)
                     {
-                        sizeCat.x += 89;
-                        if (sizeCat.x >= 450)sizeCat.x = 0;
+                        sizeCat.x += 87;
+                        if (sizeCat.x >= 430)sizeCat.x = 0;
                         timecu=clock();
                     }
                 }
@@ -172,14 +174,13 @@ sizeCat.h = chieuCaoKhungNhanVat;
                     nhanVatgame.updateToaDoX(nhanVatgame.returnToaDoX()+pxDichChuyen);
                     if (clock()-timecu>30)
                     {
-                        sizeCat.x += 89;
-                        if (sizeCat.x >= 450)sizeCat.x = 0;
+                        sizeCat.x += 87;
+                        if (sizeCat.x >= 430)sizeCat.x = 0;
                         timecu=clock();
                     }
                     // SDL_BlitSurface(nhanvatll, NULL, gALL, &{100,100});
                 }
             }
-        }
         // 0 = quay mặt sang phải
         // 1 = quay mặt sang trái
         // 2 = chạy sang phải

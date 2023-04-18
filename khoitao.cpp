@@ -8,6 +8,7 @@ Text::Text() {
     this->ToaDo.w = 0;
     this->ToaDo.h = 0;
 }
+// Hàm tạo Text
 Text::Text(SDL_Surface* gALL, const char* font_path, int font_size, const char* message, SDL_Color color, int x, int y) {
     TTF_Init();
     SDL_Init( SDL_INIT_VIDEO );
@@ -24,6 +25,7 @@ Text::~Text() {
     SDL_FreeSurface(surfaceLinkText);
     TTF_Quit();
 }
+
 void Text::updateBeMatText(SDL_Surface* gALL) {
     SDL_BlitSurface(surfaceLinkText, NULL, gALL, &ToaDo);
 }
@@ -72,7 +74,7 @@ nhanvat::nhanvat(SDL_Surface* gALL, const char* path,int x, int y,int w,int h)
     this->ToaDo.w = w;
     this->ToaDo.h = h;
 }
-///
+
 nhanvat::nhanvat(){
     this->surfaceLink = NULL;
     this->ToaDo.x = 0;

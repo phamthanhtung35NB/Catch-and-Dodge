@@ -12,6 +12,8 @@
 #include <cstdlib>
 #include<time.h>
 #include <string>
+
+// extern int check=5;
 class Text {
 public:
     Text();

@@ -1,17 +1,12 @@
-// #include <exception>
-// #include "run.cpp"
-// #include "login.cpp"
-#include "erom.h"
 
-// extern std::string name_login;
-// extern std::string diemmax;
-// extern std::string pass_login;
+#include "runCheDoVatPham.h"
+#include "manHinhKhoiDong.h"
 
-// std::string arr_login[3];
-// std::string arr[4];
 int main( int argc, char* args[] )
 {
-
+    manHinhKhoiDong();
+    std::cout<<"dang trong main";
+    runCheDoVatPham();
     
     return 0;
 }
