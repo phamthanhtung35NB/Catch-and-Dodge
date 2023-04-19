@@ -302,9 +302,9 @@ typedef enum
 } SDL_PixelFormatEnum;
 
 /**
- * The bits of this structure can be directly reinterpreted as an integer-packed
- * color which uses the SDL_PIXELFORMAT_RGBA32 format (SDL_PIXELFORMAT_ABGR8888
- * on little-endian systems and SDL_PIXELFORMAT_RGBA8888 on big-endian systems).
+ * Các bit của cấu trúc này có thể được giải thích lại trực tiếp như một số nguyên đóng gói
+ * Màu sắc sử dụng định dạng SDL_PIXELFORMAT_RGBA32 (SDL_PIXELFORMAT_ABGR8888
+ * Trên các hệ thống Little-endian và SDL_PIXELFORMAT_RGBA8888 trên các hệ thống Big-Endian).
  */
 typedef struct SDL_Color
 {

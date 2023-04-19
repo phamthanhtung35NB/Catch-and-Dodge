@@ -1,5 +1,5 @@
 #include"khoitao.h"
-// #include "runCheDoVatPham.h"
+#include "runCheDoVatPham.h"
 const int SCREEN_WIDTH = 1850;//1850;//rộng
 const int SCREEN_HEIGHT = 1000;
 const int pxDichChuyen = 15;
@@ -48,13 +48,13 @@ bool init(){
 
 
 // int main( int argc, char* args[] )
-int runCheDoVatPham()
+long runCheDoVatPham(std::string name)
 {
     SDL_Rect sizeCat;
-sizeCat.x = 0;
-sizeCat.y = 0;
-sizeCat.w = chieuRongKhungNhanVat;
-sizeCat.h = chieuCaoKhungNhanVat;
+    sizeCat.x = 0;
+    sizeCat.y = 0;
+    sizeCat.w = chieuRongKhungNhanVat;
+    sizeCat.h = chieuCaoKhungNhanVat;
 
     const Uint8 * keyState;
     long diem=0;
@@ -70,13 +70,17 @@ sizeCat.h = chieuCaoKhungNhanVat;
         nhanvat(gALL,"bianho.png",1850,0),
         nhanvat(gALL,"bom.png",1850,0)
     };
-    Text textTrue1(gALL, "data/arial.ttf", 65,  intToString(diem).c_str(),  { 255, 0, 0 },  1600, 600);
+    
+    Text textName(gALL, "data/3Dumb.ttf", 45,  name.c_str(),  { 255, 255, 255,255 },  1520, 100);
+    
+    Text textTrue1(gALL, "data/3Dumb.ttf", 65,  intToString(diem).c_str(),  { 255, 255, 255,255 },  1600, 400);
 
         // SDL_Surface* nhanvatll=IMG_Load("nhanvatRnho.png");
     // nhanvat gBackgroundphu(gALL,"nenphu.png",1500,0);
     nhanvat gBackground(gALL,"anhnenchuan.png",0,0);
     // nhanvat nhanVatgame(gALL,"nhanvatLnho.png",600,toaDoYNhanVat);
     // nhanvat nhanVatgame(gALL,"data/nhanvatgame.png",600,toaDoYNhanVat);
+    nhanvat bangdiem(gALL,"data/bangdiem.png",1700,300);
     nhanvat nhanVatgame(gALL,"data/nhanvatgame.png",600,toaDoYNhanVat);
     SDL_Event e;
     bool quit = false;
@@ -263,12 +267,13 @@ sizeCat.h = chieuCaoKhungNhanVat;
         
         
         
-        
+        bangdiem.updateBeMat(gALL);
 
         
         // std::cout<<diem;
             // Text textTrue1(gALL, "data/arial.ttf", 65,  intToString(diem).c_str(),  { 255, 0, 0 },  1600, 600);
-        textTrue1.updateBeMatText(gALL, intToString(diem).c_str(),{ 255, 0, 0 });
+        textTrue1.updateBeMatText(gALL, intToString(diem).c_str(),{ 255, 255, 255 });
+        textName.updateBeMatText(gALL);
 
     // Cập nhật
     SDL_UpdateWindowSurface(gWindow);
@@ -276,7 +281,7 @@ sizeCat.h = chieuCaoKhungNhanVat;
     SDL_Delay(1);
     }
 	// close();100/3
-	return 0;
+	return diem;
 }
 
 // void close()

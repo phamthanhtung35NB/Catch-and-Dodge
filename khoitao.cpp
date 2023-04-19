@@ -14,6 +14,7 @@ Text::Text(SDL_Surface* gALL, const char* font_path, int font_size, const char* 
     SDL_Init( SDL_INIT_VIDEO );
     this->font = TTF_OpenFont(font_path, font_size);if (font==NULL)std::cout <<"\nko co phong";
     this->surfaceLinkText = TTF_RenderText_Solid(font, message, color);
+    // SDL_FreeFormat()
     // this->texture = SDL_CreateTextureFromSurface(renderer, surface);
     // SDL_FreeSurface(surface);
     // SDL_QueryTexture(this->texture, NULL, NULL, &this->ToaDo.w, &this->ToaDo.h);
