@@ -1,9 +1,16 @@
-#include"khoitao.h"
+// #include"khoitao.h"
 #include "runCheDoVatPham.h"
 const int SCREEN_WIDTH = 1850;//1850;//rộng
 const int SCREEN_HEIGHT = 1000;
 const int pxDichChuyen = 15;
 const int toaDoYNhanVat=760;
+
+// cua so win
+SDL_Window* gWindow = NULL;
+SDL_Surface* gALL = NULL;
+Mix_Chunk* soundCoi=NULL;
+Mix_Music* musicVatpham=NULL;
+
 //0=quay mặt sang phải
 // 1 = quay mặt sang trái
 // 2 = chạy sang phải
@@ -11,77 +18,56 @@ const int toaDoYNhanVat=760;
 // 4 = nhảy
 // 5 = ngã
 int checkHoatDong=0;
+
 int chieuCaoKhungNhanVat = 150;
 int chieuRongKhungNhanVat = 90;
-
-// cua so win
-SDL_Window* gWindow = NULL;
-SDL_Surface* gALL = NULL;
-
+int HP=1;
 double timecu,timeXuatHien=0;
 int soLuong=0;//số lượng vật phẩm đang có trên màn hình
 int tocDoRoi=1;
 bool arrTrueFalse[5]{false,false,false,false,false};//vvật phẩm nài còn trên màn hình
-bool init(){
-    if( SDL_Init( SDL_INIT_VIDEO ) < 0 ){
-        std::cout<<"SDL_ERROR: \n"<<SDL_GetError();
-        return false;
-    }
-	if (TTF_Init()<0)
-    {
-        return false;
-    }
-    gWindow = SDL_CreateWindow( "Game", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT,SDL_WINDOW_SHOWN );
-	if( gWindow == NULL ){
-        std::cout<<( "Window could not be created! SDL_Error:\n", SDL_GetError() );
-        return false;
-    }
-    gALL = SDL_GetWindowSurface( gWindow );
-    int imgFlags = IMG_INIT_PNG;
-            if (!(IMG_Init(imgFlags) & imgFlags)){
-                printf("SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError());
-                return false;
-            }
-    return true;
-}
+long diem=0;
+SDL_Rect sizeHP;
+SDL_Rect sizeCat;
+
+nhanvat bia[5]{
+nhanvat(gALL,"bianho.png",1850,0),
+nhanvat(gALL,"bianho.png",1850,0),
+nhanvat(gALL,"bom.png",1850,0),
+nhanvat(gALL,"bianho.png",1850,0),
+nhanvat(gALL,"bom.png",1850,0)
+};
 
 
+Text textTrue1(gALL, "data/3Dumb.ttf", 65,  intToString(diem).c_str(),  { 255, 255, 255,255 },  1590, 510);
 
-// int main( int argc, char* args[] )
+// SDL_Surface* nhanvatll=IMG_Load("nhanvatRnho.png");
+// nhanvat gBackgroundphu(gALL,"nenphu.png",1500,0);
+nhanvat gBackground(gALL,"anhnenchuan.png",0,0);
+nhanvat thanhHP(gALL,"data/3timmau.png", 1607,361);
+nhanvat nutChucNang(gALL,"data/nutchucnangTrong.png",1754,0);
+nhanvat khungNoi(gALL,"data/khunganhnenchuan.png",0,0);
+nhanvat nhanVatgame(gALL,"data/nhanvatgame.png",600,toaDoYNhanVat);
+
+
+// int main( int argc, char* args[] ){
+//     runCheDoVatPham("ssss");
+//     return 0;
+// }
 long runCheDoVatPham(std::string name)
 {
-    SDL_Rect sizeCat;
     sizeCat.x = 0;
     sizeCat.y = 0;
     sizeCat.w = chieuRongKhungNhanVat;
     sizeCat.h = chieuCaoKhungNhanVat;
-
     const Uint8 * keyState;
-    long diem=0;
+    
     if (!init())
     {
         std::cout<<"khong the khoi tao.";   
         return 1;
     }
-    nhanvat bia[5]{
-        nhanvat(gALL,"bianho.png",1850,0),
-        nhanvat(gALL,"bianho.png",1850,0),
-        nhanvat(gALL,"bom.png",1850,0),
-        nhanvat(gALL,"bianho.png",1850,0),
-        nhanvat(gALL,"bom.png",1850,0)
-    };
-    
-    Text textName(gALL, "data/3Dumb.ttf", 45,  name.c_str(),  { 255, 255, 255,255 },  1520, 100);
-    
-    Text textTrue1(gALL, "data/3Dumb.ttf", 65,  intToString(diem).c_str(),  { 255, 255, 255,255 },  1600, 400);
-
-        // SDL_Surface* nhanvatll=IMG_Load("nhanvatRnho.png");
-    // nhanvat gBackgroundphu(gALL,"nenphu.png",1500,0);
-    nhanvat gBackground(gALL,"anhnenchuan.png",0,0);
-    // nhanvat nhanVatgame(gALL,"nhanvatLnho.png",600,toaDoYNhanVat);
-    // nhanvat nhanVatgame(gALL,"data/nhanvatgame.png",600,toaDoYNhanVat);
-    nhanvat bangdiem(gALL,"data/bangdiem.png",1700,300);
-    nhanvat nhanVatgame(gALL,"data/nhanvatgame.png",600,toaDoYNhanVat);
+    Text textName(gALL, "data/3Dumb.ttf", 35,  name.c_str(),  { 255, 255, 255,255 },  1550, 230);
     SDL_Event e;
     bool quit = false;
     // Xóa bộ đệm hiển thị
@@ -110,12 +96,14 @@ long runCheDoVatPham(std::string name)
         
         
             keyState = SDL_GetKeyboardState(NULL);
-
+        //Background
+        gBackground.updateBeMat(gALL);
         while (SDL_PollEvent(&e))
         // if (SDL_PollEvent(&e))
         {
             
             if (e.type == SDL_QUIT)quit = true;
+            
             // else if(e.key.keysym.sym== SDLK_LEFT){
             //     if (checkHoatDong==){
             //         checkHoatDong=true;
@@ -166,7 +154,7 @@ long runCheDoVatPham(std::string name)
                 if (checkHoatDong==0){
                     checkHoatDong=2;
                     nhanVatgame.updateToaDoX(nhanVatgame.returnToaDoX()+60);
-                    if (clock()-timecu>30)
+                    if (clock()-timecu>1)
                     {
                         sizeCat.x += 87;
                         if (sizeCat.x >= 430)sizeCat.x = 0;
@@ -176,7 +164,7 @@ long runCheDoVatPham(std::string name)
                 else{
                     checkHoatDong=2;
                     nhanVatgame.updateToaDoX(nhanVatgame.returnToaDoX()+pxDichChuyen);
-                    if (clock()-timecu>30)
+                    if (clock()-timecu>1)
                     {
                         sizeCat.x += 87;
                         if (sizeCat.x >= 430)sizeCat.x = 0;
@@ -185,103 +173,167 @@ long runCheDoVatPham(std::string name)
                     // SDL_BlitSurface(nhanvatll, NULL, gALL, &{100,100});
                 }
             }
-        // 0 = quay mặt sang phải
-        // 1 = quay mặt sang trái
-        // 2 = chạy sang phải
-        // 3 = chạy sang trái
-        // 4 = nhảy
-        // 5 = ngã
-        if (checkHoatDong==0)
-        {
-            sizeCat.y = 0;
-        }
-        else if (checkHoatDong==1)
-        {
-            sizeCat.y= chieuCaoKhungNhanVat*1;
-        }
-        else if (checkHoatDong==2)
-        {
-            sizeCat.y = chieuCaoKhungNhanVat*2;
-        }
-        else if (checkHoatDong==3)
-        {
-            sizeCat.y = chieuCaoKhungNhanVat*3;
-        }
-        else if (checkHoatDong==4)
-        {
-            sizeCat.y = chieuCaoKhungNhanVat*4;
-        }
-        else if (checkHoatDong==5)
-        {
-            sizeCat.y = chieuCaoKhungNhanVat*5;
-        }
-
-        //Apply the gBackground image
-        // gBackgroundphu.updateBeMat(gALL);
-        gBackground.updateBeMat(gALL);
-        if (clock()-timecu>100)
-        {
-            sizeCat.x += 89;
-            if (sizeCat.x >= 450)sizeCat.x = 0;
-            timecu=clock();
-        }
-            // nhanVatgame.updateToado(nhanVatgame.returnToaDoX()+2);
-            if (nhanVatgame.returnToaDoX()>1450)
-            {
-                nhanVatgame.updateToaDoX(1450);
-            }
-            nhanVatgame.updateBeMat(gALL,sizeCat);
+        trangThaiNhanVat();
+        vaTram();
 
         for (int i = 0; i < 5; i++)
         {
-        if ((nhanVatgame.returnToaDoX()+30<=bia[i].returnToaDoX()&&(nhanVatgame.returnToaDoX()+120>=bia[i].returnToaDoX())) && ((bia[i].returnToaDoY()<900)&&(bia[i].returnToaDoY()>600))||
-        (nhanVatgame.returnToaDoX()+30<=bia[i].returnToaDoX()&&(nhanVatgame.returnToaDoX()+120>=bia[i].returnToaDoX())) && ((bia[i].returnToaDoY()<toaDoYNhanVat+50)&&(bia[i].returnToaDoY()>toaDoYNhanVat)))
-        {
-            // bia[i].updateToaDoX(ranDom());
-            // bia[i].updateToaDoY(1);
-            arrTrueFalse[i]=false;
-            diem+=100;
-            bia[i].updateToaDoX(1900);
-            bia[i].updateToaDoY(1);
-        }
-        
-        if (bia[i].returnToaDoY()>1000)
-        {
-            int x=ranDom();
-            arrTrueFalse[i]=false;
-            bia[i].updateToaDoX(1900);
-            bia[i].updateToaDoY(1);
-        }
             if (arrTrueFalse[i]==true)
             {
-                bia[i].updateToaDoY(bia[i].returnToaDoY()+tocDoRoi);    
-        // bia[i].updateToaDoY(bia[i].returnToaDoY()+2);
+                bia[i].updateToaDoY(bia[i].returnToaDoY()+tocDoRoi);
             }
         }
+        ////////////////////////////////////////////////////////////////////////////
+        //update
         
-        //update vatpham bia
+        //Tiền
         for (int i = 0; i < 5; i++)
         {   
             bia[i].updateBeMat(gALL);
         }
-        
-        
-        
-        bangdiem.updateBeMat(gALL);
+        //nhân vật
+        nhanVatgame.updateBeMat(gALL,sizeCat);
+        //khung
+        khungNoi.updateBeMat(gALL);
 
+        int x, y;
+            SDL_GetMouseState(&x, &y);
+            if (x>1754&&x<1850&&y>0&&y<100)
+            {
+                nutChucNang.updateBeMat(gALL);
+                
+                if (e.type == SDL_MOUSEBUTTONDOWN) {
+                    Mix_PlayChannel(-1, soundCoi, 0);                  
+                }
         
-        // std::cout<<diem;
-            // Text textTrue1(gALL, "data/arial.ttf", 65,  intToString(diem).c_str(),  { 255, 0, 0 },  1600, 600);
+            }
+
+        //thanh HP
+        updateHP();
+        //điểm
         textTrue1.updateBeMatText(gALL, intToString(diem).c_str(),{ 255, 255, 255 });
+        //usersName
         textName.updateBeMatText(gALL);
-
-    // Cập nhật
-    SDL_UpdateWindowSurface(gWindow);
-    SDL_FillRect(gALL, NULL, SDL_MapRGB(gALL->format, 0x00, 0x00, 0x00));
-    SDL_Delay(1);
+        //////////////////////////////////////////////////////////////////////////////
+        // Cập nhật
+        SDL_UpdateWindowSurface(gWindow);
+        SDL_FillRect(gALL, NULL, SDL_MapRGB(gALL->format, 0x00, 0x00, 0x00));
+        SDL_Delay(1);
     }
 	// close();100/3
 	return diem;
+}
+
+bool init(){
+    gWindow = SDL_CreateWindow( "Game", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT,SDL_WINDOW_SHOWN );
+	if( gWindow == NULL ){
+        std::cout<<( "Window could not be created! SDL_Error:\n", SDL_GetError() );
+        return false;
+    }
+    gALL = SDL_GetWindowSurface( gWindow );
+    int imgFlags = IMG_INIT_PNG;
+    if (!(IMG_Init(imgFlags) & imgFlags)){
+        printf("SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError());
+        return false;
+    }
+    Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
+    musicVatpham = Mix_LoadMUS("nhacnendotoc.mp3");
+    Mix_PlayMusic(musicVatpham, -1);
+    soundCoi = Mix_LoadWAV("data/coin.wav");
+    return true;
+}
+void vaTram(){
+    for (int i = 0; i < 5; i++)
+    {
+    if ((nhanVatgame.returnToaDoX()+30<=bia[i].returnToaDoX()&&(nhanVatgame.returnToaDoX()+120>=bia[i].returnToaDoX())) && ((bia[i].returnToaDoY()<900)&&(bia[i].returnToaDoY()>600))||
+    (nhanVatgame.returnToaDoX()+30<=bia[i].returnToaDoX()&&(nhanVatgame.returnToaDoX()+120>=bia[i].returnToaDoX())) && ((bia[i].returnToaDoY()<toaDoYNhanVat+50)&&(bia[i].returnToaDoY()>toaDoYNhanVat)))
+    {
+        // bia[i].updateToaDoX(ranDom());
+        // bia[i].updateToaDoY(1);
+        Mix_PlayChannel(-1, soundCoi, 0);
+        arrTrueFalse[i]=false;
+        diem+=100;
+        bia[i].updateToaDoX(1900);
+        bia[i].updateToaDoY(1);
+    }
+    
+    if (bia[i].returnToaDoY()>1000)
+    {
+        int x=ranDom();
+        arrTrueFalse[i]=false;
+        bia[i].updateToaDoX(1900);
+        bia[i].updateToaDoY(1);
+    }
+    }
+    if (nhanVatgame.returnToaDoX()>1450)
+        {
+            nhanVatgame.updateToaDoX(1450);
+        }
+        
+}
+void trangThaiNhanVat(){
+    // 0 = quay mặt sang phải
+    // 1 = quay mặt sang trái
+    // 2 = chạy sang phải
+    // 3 = chạy sang trái
+    // 4 = nhảy
+    // 5 = ngã
+    if (checkHoatDong==0)
+    {
+        sizeCat.y = 0;
+    }
+    else if (checkHoatDong==1)
+    {
+        sizeCat.y= chieuCaoKhungNhanVat*1;
+    }
+    else if (checkHoatDong==2)
+    {
+        sizeCat.y = chieuCaoKhungNhanVat*2;
+    }
+    else if (checkHoatDong==3)
+    {
+        sizeCat.y = chieuCaoKhungNhanVat*3;
+    }
+    else if (checkHoatDong==4)
+    {
+        sizeCat.y = chieuCaoKhungNhanVat*4;
+    }
+    else if (checkHoatDong==5)
+    {
+        sizeCat.y = chieuCaoKhungNhanVat*5;
+    }
+    if (clock()-timecu>100)
+    {
+        sizeCat.x += 90;
+        timecu=clock();
+        if (sizeCat.x >= 449)sizeCat.x = 0;
+    }
+}
+void updateHP(){
+    if (HP==3)
+        {
+            
+            thanhHP.updateBeMat(gALL);
+            
+        }else if(HP==2)
+        {
+            
+            sizeHP.w = 53*2;
+            sizeHP.h = 49;
+            thanhHP.updateBeMat(gALL,sizeHP);
+        }
+        else if (HP==1)
+        {
+            sizeHP.w = 53;
+            sizeHP.h = 49;
+            thanhHP.updateBeMat(gALL,sizeHP);
+        }
+        else if (HP==0)
+        {
+            sizeHP.w = 0;
+            sizeHP.h = 0;
+            thanhHP.updateBeMat(gALL,sizeHP);
+        }
 }
 
 // void close()

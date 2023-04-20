@@ -15,59 +15,37 @@ std::string inputString;
 
 // SDL_Texture* backgroundTexture = NULL;
 Mix_Music* music=NULL;
-Mix_Chunk* soundEffect=NULL;
-const char* VIDEO_FILE_PATH = "videonhacnen.mp4";
+Mix_Chunk* soundKichChuot=NULL;
+// const char* VIDEO_FILE_PATH = "videonhacnen.mp4";
 const int SCREEN_WIDTH = 1000;//1850;//rộng
 const int SCREEN_HEIGHT = 800;
 
 nhanvat backgroundSurface(gall,"anhnenkhoidong.png",0,0);
 nhanvat SurfaceMuteVolume(gall,"data/tatlo.png",820,14);
-nhanvat SurfaceOption(gall,"data/chucnang.png",903,15);
+nhanvat SurfaceOption(gall,"data/chucnang.png",905,13);
 nhanvat SurfaceFeedBack(gall,"data/feedback.png",5,720);
 nhanvat SurfacePlay(gall,"data/playkhian.png",374,576);
 nhanvat SurfaceExit(gall,"data/exitkhian.png",780,702);
 nhanvat SurfaceUserName(gall,"data/nhapthongtin.png",286,401);
 
 bool initFileKhoiDong(){
-    // Khởi tạo SDL
-    SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
+
     //Tạo một cửa sổ
     window = SDL_CreateWindow("Start", SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED, 1000, 800, SDL_WINDOW_SHOWN);
     Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
     // Tạo trình kết xuất cho cửa sổ
     gall = SDL_GetWindowSurface( window );
     // renderer = SDL_CreateRenderer(window, -1, 0);
-
-
-
-
     // backgroundTexture = SDL_CreateTextureFromSurface(renderer, backgroundSurface);
     music = Mix_LoadMUS("nhacnendotoc.mp3");
     Mix_PlayMusic(music, -1);
-    soundEffect = Mix_LoadWAV("07071033.wav");
+    soundKichChuot = Mix_LoadWAV("data/chuotkich.wav");
     return true;
 }
-// std::string nhapText(){
-//     std::string inputString;
-//     bool nhapxong=false;
-//     SDL_Event event;
-//     while (nhapxong==false)
-//     {
-//         if (event.type == SDL_TEXTINPUT) {
-//             inputString += event.text.text;
-//         }else if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_RETURN) {
-//             // std::cout << "-----" << inputString.c_str() << std::endl;
-//             // input_string.clear();
-//             nhapxong==true;
-//             return inputString;
-//         }
-//     }
-//     return inputString;
-    
-// }
 std::string manHinhKhoiDong(){
 
     initFileKhoiDong();
+    Text text12kitu(gall, "data/arial.ttf", 15,"Userame no more than 12 characters and no special characters",  { 255, 255, 255,255 },  293, 410);
     Text textName(gall, "data/arial.ttf", 40,inputString.c_str(),  { 255, 255, 255,255 },  305, 439);
     bool quit,checkLoa,checkNhapName;
     quit = false;
@@ -78,12 +56,13 @@ std::string manHinhKhoiDong(){
         while (SDL_PollEvent(&event)) {
             backgroundSurface.updateBeMat(gall);
             if (event.type == SDL_QUIT) {
+                inputString="        ";
                 quit = true;
             }
-            //  else if (event.type == SDL_MOUSEBUTTONDOWN) {
+             else if (event.type == SDL_MOUSEBUTTONDOWN) {
                 
-            //     Mix_PlayChannel(-1, soundEffect, 0);
-            // }
+                Mix_PlayChannel(-1, soundKichChuot, 0);
+            }
             int x, y;
             SDL_GetMouseState(&x, &y);
             //nut loa
@@ -113,6 +92,9 @@ std::string manHinhKhoiDong(){
             else if (x>5&&x<217&&y>720&&y<790)
             {
                 SurfaceFeedBack.updateBeMat(gall);
+                if (event.type == SDL_MOUSEBUTTONDOWN) {
+                    ShellExecute(NULL, "open", "https://github.com/phamthanhtung35NB/Catch-and-Dodge/issues/new", NULL, NULL, SW_SHOWNORMAL);
+                }
             }
             //nút play
             else if (x>374&&x<635&&y>576&&y<694)
@@ -128,7 +110,7 @@ std::string manHinhKhoiDong(){
                 SurfaceExit.updateBeMat(gall);
                 if (event.type == SDL_MOUSEBUTTONDOWN) {
                     quit=true;
-                    Mix_PlayChannel(-1, soundEffect, 0);
+                    Mix_PlayChannel(-1, soundKichChuot, 0);
                     SDL_Delay(1000);
                 }
             }
@@ -141,16 +123,22 @@ std::string manHinhKhoiDong(){
                 }
                 
             }
+            else{
+                if (event.type == SDL_MOUSEBUTTONDOWN) {
+                    checkNhapName=false;
+                }
+            }
             //else if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_RETURN&&checkNhapName==true) {
             //         std::cout << "-----" << inputString.c_str() << std::endl;
             //         // inputString.clear();
             // }
             if (checkNhapName==true)
             {
-                if (event.type == SDL_TEXTINPUT) {
+                if (event.type == SDL_TEXTINPUT && inputString.size()<=12) {
                     inputString += event.text.text;
                 }else if (event.key.keysym.sym == SDLK_BACKSPACE && !inputString.empty()) {
                     inputString.pop_back();
+                    SDL_Delay(100);
                 }
 
             }
@@ -165,6 +153,7 @@ std::string manHinhKhoiDong(){
         {
             SurfaceUserName.updateBeMat(gall);
             textName.updateBeMatText(gall, inputString.c_str(),{ 0, 0, 0 });
+            text12kitu.updateBeMatText(gall);
         }
         
 
@@ -173,13 +162,13 @@ std::string manHinhKhoiDong(){
         SDL_UpdateWindowSurface(window);
     }
     Mix_FreeMusic(music);
-    Mix_FreeChunk(soundEffect);
+    Mix_FreeChunk(soundKichChuot);
     // SDL_DestroyTexture(backgroundTexture);
     // SDL_FreeSurface(backgroundSurface);
 
     // SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
-    SDL_Quit();
+    // SDL_Quit();
     return inputString;
 }
 
