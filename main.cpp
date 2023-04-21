@@ -19,6 +19,7 @@ bool initMain(){
         std::cout<<"Khong khoi tao duoc SDL: \n"<< IMG_GetError();
         return false;
     }
+    
     return true;
 }
 
