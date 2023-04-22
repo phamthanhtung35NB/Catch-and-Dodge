@@ -24,6 +24,9 @@ bool init();
 void updateHP();
 void vaTram();
 void trangThaiNhanVat();
+void troNgaiong();
+void hamEndGame();
+int hamLevel();
 long runCheDoVatPham(std::string name);
 // void close();
 #endif
