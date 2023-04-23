@@ -1,8 +1,0 @@
-**
-cout
-cin
-std
-string
-int
-float
-double

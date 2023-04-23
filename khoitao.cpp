@@ -85,6 +85,7 @@ nhanvat::nhanvat(){
 }
 nhanvat::~nhanvat()
 {
+    
     SDL_FreeSurface(surfaceLink);
 	SDL_Quit();
 }

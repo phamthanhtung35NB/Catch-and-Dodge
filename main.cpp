@@ -1,6 +1,6 @@
-
 #include "runCheDoVatPham.h"
 #include "manHinhKhoiDong.h"
+#include "endGame.h"
 std::string Name;//tên người chơi
 long diemdadat=0;//điểm đạt được
 int chedo=1;//chọn chế độ chơi
@@ -28,6 +28,7 @@ int main( int argc, char* args[] )
     if (initMain())
     {
         //màn đăng nhập
+        tieptuc:
         Name=manHinhKhoiDong();
         std::cout<<Name;
         //chọn chế độ
@@ -39,14 +40,33 @@ int main( int argc, char* args[] )
         {
             //chế độ vât phẩm
             diemdadat=runCheDoVatPham(Name);
-            std::cout<<diemdadat;
+            close();
+            chedo=0;
         }else if (chedo==2)
         {
             //che độ text
+            chedo=0;
             return 0;
         }
-    
+        if (diemdadat==-1000)
+        {
+            SDL_Quit();
+            return 0;
+        }
         
+        bool luaChon=false;
+        luaChon=endGame(level,diemdadat,Name);
+        if (luaChon==true&&chedo==0)
+        {   
+            chedo=1;
+            goto tieptuc;
+        }
+        // else if (luaChon==false&&chedo==0)
+        // {
+            
+        //     goto tieptuc;
+        // }
     }
+    SDL_Quit();
     return 0;
 }

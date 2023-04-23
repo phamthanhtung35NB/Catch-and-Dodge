@@ -1,16 +1,9 @@
 #include"manHinhKhoiDong.h"
 
 SDL_Window* window=NULL;
-// SDL_Renderer* renderer =NULL;
+
 SDL_Surface* gall =NULL;
 std::string inputString;
-// SDL_Surface* SurfaceMuteVolume=NULL;
-// SDL_Surface* SurfaceOption=NULL;
-// SDL_Surface* SurfaceFeedBack=NULL;
-// SDL_Surface* SurfacePlay=NULL;
-// SDL_Surface* SurfaceExit=NULL;
-// SDL_Surface* SurfaceUserName=NULL;
-// SDL_Surface* backgroundSurface=NULL;
 
 
 // SDL_Texture* backgroundTexture = NULL;
@@ -20,7 +13,7 @@ Mix_Chunk* soundKichChuot=NULL;
 const int SCREEN_WIDTH = 1000;//1850;//rộng
 const int SCREEN_HEIGHT = 800;
 
-nhanvat backgroundSurface(gall,"anhnenkhoidong.png",0,0);
+nhanvat backgroundSurface(gall,"data/anhnenkhoidong.png",0,0);
 nhanvat SurfaceMuteVolume(gall,"data/tatlo.png",820,14);
 nhanvat SurfaceOption(gall,"data/chucnang.png",905,13);
 nhanvat SurfaceFeedBack(gall,"data/feedback.png",5,720);
@@ -37,7 +30,7 @@ bool initFileKhoiDong(){
     gall = SDL_GetWindowSurface( window );
     // renderer = SDL_CreateRenderer(window, -1, 0);
     // backgroundTexture = SDL_CreateTextureFromSurface(renderer, backgroundSurface);
-    music = Mix_LoadMUS("nhacnendotoc.mp3");
+    music = Mix_LoadMUS("data/nhacnendotoc.mp3");
     Mix_PlayMusic(music, -1);
     soundKichChuot = Mix_LoadWAV("data/chuotkich.wav");
     return true;
