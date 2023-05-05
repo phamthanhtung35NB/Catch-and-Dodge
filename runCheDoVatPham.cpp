@@ -1,57 +1,49 @@
-// #include"khoitao.h"
 #include "runCheDoVatPham.h"
 const int SCREEN_WIDTH = 1850;//1850;//rộng
 const int SCREEN_HEIGHT = 1000;
+const int pxDichChuyen = 1500;
+const int timeHoiTocBien=5000;
+const int timeHoiKhien=20000;
+
 int timeTextHoiTocBien;
 int timeTextHoiKhien;
- int toaDoYNhanVat=760;
+int toaDoYNhanVat=760;
 int HP=3;
 int level=1;
 int tocDoRoi=3;
 int buocNhay=0;
-// int tocDoRoi=13;
 int pxDiChuyen = 11;
-const int pxDichChuyen = 400;
-const int timeHoiTocBien=10000;
-const int timeHoiKhien=10000;
-double timeTocBien=clock();
-double timeKhien=clock();
-bool nhay=false;
-bool quit = false;
-// cua so win
-SDL_Window* gWindow = NULL;
-SDL_Surface* gALL = NULL;
-Mix_Chunk* soundCoi=NULL;
-Mix_Chunk* soundNo=NULL;
-// Mix_Music* musicVatpham=NULL;
-// Mix_Music* music;
-
+int timeKhienDuyTri=10000;
+int chieuCaoKhungNhanVat = 150;
+int chieuRongKhungNhanVat = 90;
+int soLuongCoin=0;//số lượng vật phẩm đang có trên màn hình
+int soLuongBom=0;
+int diem=0;
+int checkHoatDong=0;
 //0=quay mặt sang phải
 // 1 = quay mặt sang trái
 // 2 = chạy sang phải
 // 3 = chạy sang trái
 // 4 = nhảy
 // 5 = ngã
-int checkHoatDong=0;
 
-int chieuCaoKhungNhanVat = 150;
-int chieuRongKhungNhanVat = 90;
+double timeTocBien=clock();
+double timeKhien=-5000;
 double timecu,timeXuatHien,timeXuatHienBom=0;
-int soLuongCoin=0;//số lượng vật phẩm đang có trên màn hình
-int soLuongBom=0;
+double timeBossXuatHienLanTiep;
+
+bool nhay=false;
+bool dangBaoVe=false;
+bool quit = false;
 bool arrCoinTrueFalse[5]{false,false,false,false,false};//vvật phẩm nài còn trên màn hình
 bool arrBomTrueFalse[3]{false,false,false};
-int diem=0;
-    // SDL_Rect(bia[0].returnToaDoX(),bia[0].returnToaDoY(),bia[0].returnToaDoX()+50,bia[0].returnToaDoY()+97),
-    // SDL_Rect(bia[1].returnToaDoX(),bia[1].returnToaDoY(),bia[1].returnToaDoX()+90,bia[1].returnToaDoY()+150),
-    // SDL_Rect(bia[2].returnToaDoX(),bia[2].returnToaDoY(),bia[2].returnToaDoX()+90,bia[2].returnToaDoY()+150),
-    // SDL_Rect(bia[3].returnToaDoX(),bia[3].returnToaDoY(),bia[3].returnToaDoX()+90,bia[3].returnToaDoY()+150),
-    // SDL_Rect(bia[4].returnToaDoX(),bia[4].returnToaDoY(),bia[4].returnToaDoX()+90,bia[4].returnToaDoY()+150),
-//     SDL_Rect(bom[0].returnToaDoX(),bom[0].returnToaDoY(),bom[0].returnToaDoX()+50,bom[0].returnToaDoY()+97),
-//     SDL_Rect(bom[1].returnToaDoX(),bom[1].returnToaDoY(),bom[1].returnToaDoX()+50,bom[1].returnToaDoY()+97),
-//     SDL_Rect(bom[2].returnToaDoX(),bom[2].returnToaDoY(),bom[2].returnToaDoX()+50,bom[2].returnToaDoY()+97),
-//     SDL_Rect(bom[3].returnToaDoX(),bom[3].returnToaDoY(),bom[3].returnToaDoX()+50,bom[3].returnToaDoY()+97),
-//     SDL_Rect(bom[4].returnToaDoX(),bom[4].returnToaDoY(),bom[4].returnToaDoX()+50,bom[4].returnToaDoY()+97),
+bool checkBossDangHoatDong=false;
+// cua so win
+SDL_Window* gWindow = NULL;
+//be mat de ve
+SDL_Surface* gALL = NULL;
+Mix_Chunk* soundCoi=NULL;
+Mix_Chunk* soundNo=NULL;
 
 
 nhanvat bia[5]{
@@ -63,14 +55,11 @@ nhanvat(gALL,"data/coin1.png",1850,0)
 };
 nhanvat bom[3]{
 nhanvat(gALL,"data/bom.png",1850,0),
-// nhanvat(gALL,"data/2bom.png",1850,0),
 nhanvat(gALL,"data/bomDai.png",1850,0),
 nhanvat(gALL,"data/boBom.png",1850,0),
-// nhanvat(gALL,"data/bomso2.png",1850,0)
 };
-SDL_Rect khungXYWHbom[3];
 
-
+bossG troNgaiOng(gALL,"data/ong.png",0,0);
 nhanvat khien(gALL,"data/khien.png",150,915);
 nhanvat tocBien(gALL,"data/tocBien.png",250,915);
 nhanvat gBackground(gALL,"data/anhnenchuan.png",0,0);
@@ -78,9 +67,10 @@ nhanvat thanhHP(gALL,"data/3timmau.png", 1607,361);
 nhanvat nutChucNang(gALL,"data/nutchucnangTrong.png",1754,0);
 nhanvat khungNoi(gALL,"data/khunganhnenchuan.png",0,0);
 nhanvat nhanVatgame(gALL,"data/nhanvatgame.png",600,toaDoYNhanVat);
-bossG troNgaiOng(gALL,"data/ong.png",0,0);
+nhanvat khienChoNhanVat(gALL,"data/khienchonhanvat.png",600,toaDoYNhanVat);
 nhanvat endGame(gALL,"data/manEndGame.png",688,200);
 nhanvat nutNext(gALL,"data/nutnext.png",841,738);
+// sao moix khi tawng lv
 nhanvat sao[4]{
 nhanvat(gALL," ",0,0),
 nhanvat(gALL,"data/1sao.png",872,295),
@@ -89,89 +79,19 @@ nhanvat(gALL,"data/3sao.png",767,300)
 };
 Text textDiem(gALL, "data/3Dumb.ttf", 65,  intToString(diem).c_str(),  { 255, 255, 255,255 },  1590, 510);
 Text textLevel(gALL, "data/3Dumb.ttf", 65,  ("level "+intToString(level)).c_str(),  { 255, 255, 255,255 },  1580, 810);
-Text textTimeHoiKhien(gALL,"data/arial.ttf",30,(intToString(timeTextHoiKhien)+"S").c_str(),{ 255, 255, 255 },155,960);
-Text textTimeHoiTocBien(gALL,"data/arial.ttf",30,(intToString(timeTextHoiTocBien)+"s").c_str(),{ 255, 255, 255 },245,960);
+Text textTimeHoiKhien(gALL,"data/arial.ttf",30,(intToString(timeTextHoiKhien)+"S").c_str(),{ 255, 255, 255 },143,963);
+Text textTimeHoiTocBien(gALL,"data/arial.ttf",30,(intToString(timeTextHoiTocBien)+"s").c_str(),{ 255, 255, 255 },243,963);
+//huong dan
 Text QE(gALL,"data/3Dumb.ttf",30,"Q-E",{ 255, 255, 255 },245,970);
 Text B(gALL,"data/3Dumb.ttf",30," B ",{ 255, 255, 255 },153,970);
 
 SDL_Rect sizeHP;
 SDL_Rect sizeCat;
 SDL_Rect khungXYWHnhanVat;
-
 SDL_Rect khungXYWHbia[5];
+SDL_Rect khungXYWHbom[3];
 const Uint8 * keyState;
-// void hamTroNgaiong(){
-//     if (nhanVatgame.returnToaDoX()>troNgaiOng.returnToaDoX())
-//     {
-//         troNgaiOng.updateToaDoX(troNgaiOng.returnToaDoX()+2);
-//         troNgaiOng.updateToaDoY(troNgaiOng.returnToaDoY()+3);
-//     }
-//     else
-//     {
-        
-//         troNgaiOng.updateToaDoX(troNgaiOng.returnToaDoX()-2);
-//         troNgaiOng.updateToaDoY(troNgaiOng.returnToaDoY()+3);
-//     }
-// }
-void xuLyTocBienVsKhien(){
-    timeTextHoiTocBien=(int)(timeHoiTocBien-(clock()-timeTocBien));
-    timeTextHoiKhien=(int)(timeHoiKhien-(clock()-timeKhien));
-    tocBien.updateBeMat(gALL);
-    khien.updateBeMat(gALL);
-    if (timeTextHoiTocBien>0)
-    {
-        textTimeHoiTocBien.updateBeMatText(gALL,(intToString(timeTextHoiTocBien/1000)+","+intToString((timeTextHoiTocBien/10)%100)+"s").c_str(),{ 255, 255, 255 });    
-    }
-    else{
-        QE.updateBeMatText(gALL);
-    }
-    if (timeTextHoiKhien>0)
-    {
-        textTimeHoiKhien.updateBeMatText(gALL,(intToString(timeTextHoiKhien/1000)+","+intToString((timeTextHoiKhien/10)%100)+"s").c_str(),{ 255, 255, 255 });
-    }
-    else
-    {
-        B.updateBeMatText(gALL);
-    }
-}
-void hamEndGame(){
-    bool quit=false;
-    int x, y;
-    if (HP>3)
-    {
-        HP=3;
-    }
-    while (quit==false)
-    {
-    SDL_Event e;
-        keyState = SDL_GetKeyboardState(NULL);
-        if (keyState[SDL_SCANCODE_KP_ENTER])
-        {
-            Mix_PlayChannel(-1, soundCoi, 0);
-            quit=true;  
-        }
-        endGame.updateBeMat(gALL);
-        if (SDL_PollEvent(&e)){
-            
-            SDL_GetMouseState(&x, &y);
-            if (x>841&&x<841+177&&y>738&&y<63+738)
-            {
-                nutNext.updateBeMat(gALL);
-                if (e.type == SDL_MOUSEBUTTONDOWN) {
-                    Mix_PlayChannel(-1, soundCoi, 0);
-                    quit=true;              
-                }                
-            }
-            if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_RETURN)
-            {
-                Mix_PlayChannel(-1, soundCoi, 0);
-                quit=true;  
-            }
-        }
-        sao[HP].updateBeMat(gALL);
-        SDL_UpdateWindowSurface(gWindow);
-    }
-}
+
 int runCheDoVatPham(std::string name)
 {
     sizeCat.x = 0;
@@ -184,14 +104,11 @@ int runCheDoVatPham(std::string name)
 
     khungXYWHbom[0].w=69;
     khungXYWHbom[0].h=96;
-    // khungXYWHbom[1].w=80;
-    // khungXYWHbom[1].h=90;
     khungXYWHbom[1].w=99;
     khungXYWHbom[1].h=82;////82
     khungXYWHbom[2].w=83;
     khungXYWHbom[2].h=83;
-    // khungXYWHbom[3].w=65;
-    // khungXYWHbom[3].h=70;//30
+
     
     if (!init())
     {
@@ -201,17 +118,8 @@ int runCheDoVatPham(std::string name)
     Text textName(gALL, "data/3Dumb.ttf", 35,  name.c_str(),  { 255, 255, 255,255 },  1550, 230);
     SDL_Event e;
     
-    // Xóa bộ đệm hiển thị
-    // SDL_FillRect(ga, NULL, SDL_MapRGB(textSurface->format, 0x00, 0x00, 0x00));
-
-    
-    
     while (quit == false)
     {
-        // Xóa màn hình
-        // SDL_FillRect(gALL, NULL, SDL_MapRGB(gALL->format, 0xFF, 0xFF, 0xFF));
-        // if (checkHoatDong==2)checkHoatDong=0;
-        // else checkHoatDong=1;
         if (clock()-timeXuatHien>1000 && soLuongCoin<5&&arrCoinTrueFalse[soLuongCoin]==false)
         {
             timeXuatHien=clock();
@@ -241,172 +149,80 @@ int runCheDoVatPham(std::string name)
         gBackground.updateBeMat(gALL);
         while (SDL_PollEvent(&e))
         {
-            
             if (e.type == SDL_QUIT){
                 quit = true;
                 diem=-1000;
-                }
-            
-            // else if(e.key.keysym.sym== SDLK_LEFT){
-            //     if (checkHoatDong==){
-            //         checkHoatDong=true;
-            //         nhanVatgame.updateToaDoX(nhanVatgame.returnToaDoX()-60);
-            //     }
-            //     else{
-            //     nhanVatgame.updateToaDoX(nhanVatgame.returnToaDoX()-pxDiChuyen);
-            //     }
-            // }
-            // else if(e.key.keysym.sym==SDLK_RIGHT){
-            //     if (checkHoatDong==true){
-            //         checkHoatDong=false;
-            //         nhanVatgame.updateToaDoX(nhanVatgame.returnToaDoX()+60);
-            //     }
-            //     else{
-            //         nhanVatgame.updateToaDoX(nhanVatgame.returnToaDoX()+pxDiChuyen);
-            //         // SDL_BlitSurface(nhanvatll, NULL, gALL, &{100,100});
-            //     }
-            // }
-            //phai
-
-
-
-        //     int x, y;
-        // SDL_GetMouseState(&x, &y);
-        //     if (e.type == SDL_MOUSEBUTTONDOWN) {
-        //         // Mix_PlayChannel(-1, soundCoi, 0);
-        //         std::cout<<x<<" "<<y<<"\n";                  
-        //     }
+            }
+            // int x, y;
+            // SDL_GetMouseState(&x, &y);
+            // if (e.type == SDL_MOUSEBUTTONDOWN) std::cout<<x<<" "<<y<<"\n";
         }
-        
-            //chay sang trai
-            if(keyState[SDL_SCANCODE_A]||keyState[SDL_SCANCODE_LEFT]){
-                //dang nghi,chay sang phai
-                if (checkHoatDong==1||checkHoatDong==0||checkHoatDong==2){
-                    checkHoatDong=3;
-                    nhanVatgame.updateToaDoX(nhanVatgame.returnToaDoX()-60);
-                    if (clock()-timecu>30)
-                    {
-                        sizeCat.x += 90;
-                        if (sizeCat.x >= 430)sizeCat.x = 0;
-                        timecu=clock();
-                    }
-                }
-                //dang chay sang trai
-                else if (checkHoatDong==3){
-                nhanVatgame.updateToaDoX(nhanVatgame.returnToaDoX()-pxDiChuyen);
+    
+        //chay sang trai
+        if(keyState[SDL_SCANCODE_A]||keyState[SDL_SCANCODE_LEFT]){
+            //dang nghi,chay sang phai
+            if (checkHoatDong==1||checkHoatDong==0||checkHoatDong==2){
+                checkHoatDong=3;
+                nhanVatgame.updateToaDoX(nhanVatgame.returnToaDoX()-60);
                 if (clock()-timecu>30)
-                    {
-                        sizeCat.x += 90;
-                        if (sizeCat.x >= 430)sizeCat.x = 0;
-                        timecu=clock();
-                    }
+                {
+                    sizeCat.x += 90;
+                    if (sizeCat.x >= 430)sizeCat.x = 0;
+                    timecu=clock();
                 }
             }
-            //chay sang phai
-            else if(keyState[SDL_SCANCODE_D]||keyState[SDL_SCANCODE_RIGHT]){
-                //dang nghi,chay sang trai
-                if (checkHoatDong==0||checkHoatDong==1||checkHoatDong==3){
-                    checkHoatDong=2;
-                    nhanVatgame.updateToaDoX(nhanVatgame.returnToaDoX()+60);
-                    if (clock()-timecu>1)
-                    {
-                        sizeCat.x += 90;
-                        if (sizeCat.x >= 430)sizeCat.x = 0;
-                        timecu=clock();
-                    }
-                }
-                //dang chay sang phai
-                else if(checkHoatDong==2){
-                    checkHoatDong=2;
-                    nhanVatgame.updateToaDoX(nhanVatgame.returnToaDoX()+pxDiChuyen);
-                    if (clock()-timecu>1)
-                    {
-                        sizeCat.x += 90;
-                        if (sizeCat.x >= 430)sizeCat.x = 0;
-                        timecu=clock();
-                    }
-                    // SDL_BlitSurface(nhanvatll, NULL, gALL, &{100,100});
+            //dang chay sang trai
+            else if (checkHoatDong==3){
+            nhanVatgame.updateToaDoX(nhanVatgame.returnToaDoX()-pxDiChuyen);
+            if (clock()-timecu>30)
+                {
+                    sizeCat.x += 90;
+                    if (sizeCat.x >= 430)sizeCat.x = 0;
+                    timecu=clock();
                 }
             }
-            // tocBientrai
-            else if(keyState[SDL_SCANCODE_Q]&&clock()-timeTocBien>timeHoiTocBien){
-                timeTocBien=clock();
-                //dang nghi,chay sang phai
-                if (checkHoatDong==1||checkHoatDong==0||checkHoatDong==2){
-                    checkHoatDong=3;
-                    nhanVatgame.updateToaDoX(nhanVatgame.returnToaDoX()-60-pxDichChuyen);
-                    if (clock()-timecu>30)
-                    {
-                        sizeCat.x += 90;
-                        if (sizeCat.x >= 430)sizeCat.x = 0;
-                        timecu=clock();
-                    }
-                }
-                //dang chay sang trai
-                else if (checkHoatDong==3){
-                nhanVatgame.updateToaDoX(nhanVatgame.returnToaDoX()-pxDiChuyen-pxDichChuyen);
-                if (clock()-timecu>30)
-                    {
-                        sizeCat.x += 90;
-                        if (sizeCat.x >= 430)sizeCat.x = 0;
-                        timecu=clock();
-                    }
+        }
+        //chay sang phai
+        else if(keyState[SDL_SCANCODE_D]||keyState[SDL_SCANCODE_RIGHT]){
+            //dang nghi,chay sang trai
+            if (checkHoatDong==0||checkHoatDong==1||checkHoatDong==3){
+                checkHoatDong=2;
+                nhanVatgame.updateToaDoX(nhanVatgame.returnToaDoX()+60);
+                if (clock()-timecu>1)
+                {
+                    sizeCat.x += 90;
+                    if (sizeCat.x >= 430)sizeCat.x = 0;
+                    timecu=clock();
                 }
             }
-            // tocbienphai
-            else if(keyState[SDL_SCANCODE_E]&&clock()-timeTocBien>timeHoiTocBien){
-                timeTocBien=clock();
-                //dang nghi,chay sang trai
-                if (checkHoatDong==0||checkHoatDong==1||checkHoatDong==3){
-                    checkHoatDong=2;
-                    nhanVatgame.updateToaDoX(nhanVatgame.returnToaDoX()+60+pxDichChuyen);
-                    if (clock()-timecu>1)
-                    {
-                        sizeCat.x += 90;
-                        if (sizeCat.x >= 430)sizeCat.x = 0;
-                        timecu=clock();
-                    }
-                }
-                //dang chay sang phai
-                else if(checkHoatDong==2){
-                    nhanVatgame.updateToaDoX(nhanVatgame.returnToaDoX()+pxDiChuyen+pxDichChuyen);
-                    if (clock()-timecu>1)
-                    {
-                        sizeCat.x += 90;
-                        if (sizeCat.x >= 430)sizeCat.x = 0;
-                        timecu=clock();
-                    }
+            //dang chay sang phai
+            else if(checkHoatDong==2){
+                checkHoatDong=2;
+                nhanVatgame.updateToaDoX(nhanVatgame.returnToaDoX()+pxDiChuyen);
+                if (clock()-timecu>1)
+                {
+                    sizeCat.x += 90;
+                    if (sizeCat.x >= 430)sizeCat.x = 0;
+                    timecu=clock();
                 }
             }
-            //khien
-            else if(keyState[SDL_SCANCODE_B]){
-
-            }
-            //nhay
-            else if(keyState[SDL_SCANCODE_SPACE]&&nhay==false){
-                nhay=true;
-            }
-            if (nhay==true&&buocNhay<=3)
-            {
-                nhanVatgame.updateToaDoY(nhanVatgame.returnToaDoY()-7);
-                buocNhay++;
-            }
-            else if (buocNhay>3)
-            {
-                buocNhay=0;
-                nhay=false;
-            }
-            else if (nhay==false&&nhanVatgame.returnToaDoY()<=760)
-            {
-                nhanVatgame.updateToaDoY(nhanVatgame.returnToaDoY()+7);
-            }
-            
-            
-            
+        }
+        //khien
+        else if(keyState[SDL_SCANCODE_B]&&dangBaoVe==false&&clock()-timeKhien>timeHoiKhien){
+            timeKhien=clock();
+            dangBaoVe=true;
+        }
+        //nhay
+        if(keyState[SDL_SCANCODE_SPACE]&&nhay==false){
+            nhay=true;
+        }
+        tatKhien();
+        checkTocBien();
+        xuLyNhay();
         trangThaiNhanVat();
         hamUpdateLevel();
         vaTram();
-
+        //update toa do bom + vat pham
         for (int i = 0; i < 5; i++)
         {
             if (i<3)
@@ -424,8 +240,8 @@ int runCheDoVatPham(std::string name)
             }
             
         }
-        ////////////////////////////////////////////////////////////////////////////
-        //update
+
+        //update be mat
         
         //Tiền + bom
         for (int i = 0; i < 5; i++)
@@ -438,11 +254,20 @@ int runCheDoVatPham(std::string name)
         }
         //nhân vật
         nhanVatgame.updateBeMat(gALL,sizeCat);
+        //khien
+        if (dangBaoVe==true)
+        {
+            khienChoNhanVat.updateToaDoX(nhanVatgame.returnToaDoX());
+            khienChoNhanVat.updateToaDoY(nhanVatgame.returnToaDoY());
+            khienChoNhanVat.updateBeMat(gALL);
+        }
+        //boss
         troNgaiOng.updateToaDoBosVaVaTram(gALL);
         //khung
         khungNoi.updateBeMat(gALL);
         // toc bien+khien
-        xuLyTocBienVsKhien();
+        upDateAnhXuatHienTocBienVsKhien();
+        //nut chuc nang khi ddang choi
         int x, y;
         SDL_GetMouseState(&x, &y);
         if (x>1754&&x<1850&&y>0&&y<100)
@@ -459,19 +284,20 @@ int runCheDoVatPham(std::string name)
         updateHP();
         //điểm
         textDiem.updateBeMatText(gALL, intToString(diem).c_str(),{ 255, 255, 255 });
+        //leve
         textLevel.updateBeMatText(gALL,("Level "+intToString(level)).c_str(),{ 0, 0, 0 });
-        //usersName
+        //ten nguoi choi
         textName.updateBeMatText(gALL);
 
-        //////////////////////////////////////////////////////////////////////////////
-        // Cập nhật
+        //////////////
+        // Cập nhật all
         SDL_UpdateWindowSurface(gWindow);
-        
+        // het mang
         if (HP==0)
         {
             quit=true;
         }
-        
+        //xoa
         SDL_FillRect(gALL, NULL, SDL_MapRGB(gALL->format, 0x00, 0x00, 0x00));
         SDL_Delay(7);
         
@@ -480,38 +306,45 @@ int runCheDoVatPham(std::string name)
 }
 
 void hamUpdateLevel(){
-    if( (diem>=500&&level==1)||(diem>=1000&&level==2)||(diem>=1500&&level==3)||
-        (diem>=2000&&level==4)||(diem>=2500&&level==5)||(diem>=3000&&level==6))
+    if( (diem>=500&&level==1)||(diem>=1000&&level==2)||(diem>=1500&&level==3))
     {
+        HP++;
+        level++;
+        hamEndGame();
+        if (level==3)
+        {
+            tocDoRoi++;
+        }
+    }
+    else if ((diem>=2000&&level==4)||(diem>=3000&&level==5)
+    ||(diem>=5000&&level==6))
+    {
+        
         HP++;
         level++;
         hamEndGame();
         tocDoRoi++;
     }
-    else if ((diem>=3500&&level==7))
+    else if ((diem>=5500&&level==7)||(diem>=6000&&level==8))
     {
         HP++;
         level++;
         hamEndGame();
-        tocDoRoi+=2;
     }
-    else if ((diem>=4000&&level==8))
+    else if (diem>=7000&&level==9)
     {
         HP++;
         level++;
         hamEndGame();
-        tocDoRoi+=2;
+        tocDoRoi++;
         pxDiChuyen++;
     }
-    else if ((diem>=4500&&level==9))
+    if ((diem>=2100&&level>=4)&&clock()-timeBossXuatHienLanTiep>10000)
     {
-        HP++;
-        level++;
-        hamEndGame();
-        tocDoRoi+=3;
-        pxDiChuyen++;
-    }
-    
+        timeBossXuatHienLanTiep=clock();
+        checkBossDangHoatDong=true;
+        troNgaiOng.khoiTaoLaiToaDo();
+    } 
 }
 
 bool init(){
@@ -536,18 +369,22 @@ bool init(){
 void vaTram(){
     khungXYWHnhanVat.x=nhanVatgame.returnToaDoX();
     khungXYWHnhanVat.y=nhanVatgame.returnToaDoY();
-    
-    if((troNgaiOng.updateToaDoBosVaVaTram(gALL,khungXYWHnhanVat))==1){
-    std::cout<<"tramj";
-
+    //khi va tram voi ong
+    if((troNgaiOng.updateToaDoBosVaVaTram(gALL,khungXYWHnhanVat))==1&&checkBossDangHoatDong==true)
+    {
+        checkBossDangHoatDong=false;
+        Mix_PlayChannel(-1, soundNo, 0);
+        diem-=500;
+        HP--;
     }
     for (int i = 0; i < 5; i++)
     {
+        //lay toa do vat pham cho vao rect
         khungXYWHbia[i].x=bia[i].returnToaDoX();
         khungXYWHbia[i].y=bia[i].returnToaDoY();
         khungXYWHbia[i].w=50;
         khungXYWHbia[i].h=97;
-
+        //lay toa do bom cho vao rect
         if (i<3)
         {
             khungXYWHbom[i].x=bom[i].returnToaDoX();
@@ -559,55 +396,53 @@ void vaTram(){
         else if (i==0||i==2){
             khungXYWHbom[i].y=bom[i].returnToaDoY();
         }
-        
-        
-        
-        
-
-
-    if (SDL_HasIntersection(&khungXYWHnhanVat, &khungXYWHbia[i]))
-    {
-    // if ((nhanVatgame.returnToaDoX()+30<=bia[i].returnToaDoX()&&(nhanVatgame.returnToaDoX()+60>=bia[i].returnToaDoX())) && ((bia[i].returnToaDoY()<850)&&(bia[i].returnToaDoY()>750)))
-    // std::cout<<khungXYWHnhanVat.x<<" "<<khungXYWHnhanVat.y<<" "<<khungXYWHnhanVat.w<<" "<<khungXYWHnhanVat.h<<"\n";
-
-    // std::cout<<khungXYWHbia[i].x<<" "<<khungXYWHbia[i].y<<" "<<khungXYWHbia[i].w<<" "<<khungXYWHbia[i].h<<"\n";
-    
-        // bia[i].updateToaDoX(ranDom());
-        // bia[i].updateToaDoY(1);
-        Mix_PlayChannel(-1, soundCoi, 0);
-        arrCoinTrueFalse[i]=false;
-        diem+=100;
-        bia[i].updateToaDoX(1900);
-        bia[i].updateToaDoY(1);
-        
-    }
-    if (i<3)
-    {
-        if (SDL_HasIntersection(&khungXYWHnhanVat, &khungXYWHbom[i]))
+        //va tram voi vat pham
+        if (SDL_HasIntersection(&khungXYWHnhanVat, &khungXYWHbia[i]))
         {
-            Mix_PlayChannel(-1, soundNo, 0);
+            Mix_PlayChannel(-1, soundCoi, 0);
+            arrCoinTrueFalse[i]=false;
+            diem+=100;
+            bia[i].updateToaDoX(1900);
+            bia[i].updateToaDoY(1);
+            
+        }
+        //va tram voi bom
+        if (i<3)
+        {
+            if (SDL_HasIntersection(&khungXYWHnhanVat, &khungXYWHbom[i]))
+            {
+                if (dangBaoVe==true)
+                {
+                    Mix_PlayChannel(-1, soundNo, 0);
+                    arrBomTrueFalse[i]=false;
+                    bom[i].updateToaDoX(1900);
+                    bom[i].updateToaDoY(1);
+                }
+                else{
+                    Mix_PlayChannel(-1, soundNo, 0);
+                    arrBomTrueFalse[i]=false;
+                    diem-=100;
+                    HP--;
+                    bom[i].updateToaDoX(1900);
+                    bom[i].updateToaDoY(1);
+                }
+            }
+        }
+        
+        if (bia[i].returnToaDoY()>1000)
+        {
+            int x=ranDom();
+            arrCoinTrueFalse[i]=false;
+            bia[i].updateToaDoX(1900);
+            bia[i].updateToaDoY(1);
+        }
+        if (bom[i].returnToaDoY()>1000&&i<3)
+        {
+            int x=ranDom();
             arrBomTrueFalse[i]=false;
-            diem-=100;
-            HP--;
             bom[i].updateToaDoX(1900);
             bom[i].updateToaDoY(1);
         }
-    }
-    
-    if (bia[i].returnToaDoY()>1000)
-    {
-        int x=ranDom();
-        arrCoinTrueFalse[i]=false;
-        bia[i].updateToaDoX(1900);
-        bia[i].updateToaDoY(1);
-    }
-    if (bom[i].returnToaDoY()>1000&&i<3)
-    {
-        int x=ranDom();
-        arrBomTrueFalse[i]=false;
-        bom[i].updateToaDoX(1900);
-        bom[i].updateToaDoY(1);
-    }
     }
     if (nhanVatgame.returnToaDoX()>1450)
     {
@@ -697,3 +532,140 @@ void close()
     quit=false;
 	SDL_DestroyWindow( gWindow );
 }
+void hamEndGame(){
+    bool quit=false;
+    int x, y;
+    if (HP>3)
+    {
+        HP=3;
+    }
+    while (quit==false)
+    {
+    SDL_Event e;
+        keyState = SDL_GetKeyboardState(NULL);
+        if (keyState[SDL_SCANCODE_KP_ENTER])
+        {
+            Mix_PlayChannel(-1, soundCoi, 0);
+            quit=true;  
+        }
+        endGame.updateBeMat(gALL);
+        if (SDL_PollEvent(&e)){
+            
+            SDL_GetMouseState(&x, &y);
+            if (x>841&&x<841+177&&y>738&&y<63+738)
+            {
+                nutNext.updateBeMat(gALL);
+                if (e.type == SDL_MOUSEBUTTONDOWN) {
+                    Mix_PlayChannel(-1, soundCoi, 0);
+                    quit=true;              
+                }                
+            }
+            if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_RETURN)
+            {
+                Mix_PlayChannel(-1, soundCoi, 0);
+                quit=true;  
+            }
+        }
+        sao[HP].updateBeMat(gALL);
+        SDL_UpdateWindowSurface(gWindow);
+    }
+}
+void upDateAnhXuatHienTocBienVsKhien(){
+    timeTextHoiTocBien=(int)(timeHoiTocBien-(clock()-timeTocBien));
+    timeTextHoiKhien=(int)(timeHoiKhien-(clock()-timeKhien));
+    tocBien.updateBeMat(gALL);
+    khien.updateBeMat(gALL);
+    if (timeTextHoiTocBien>0)
+    {
+        textTimeHoiTocBien.updateBeMatText(gALL,(intToString(timeTextHoiTocBien/1000)+","+intToString((timeTextHoiTocBien/10)%100)+"s").c_str(),{ 255, 255, 255 });    
+    }
+    else{
+        QE.updateBeMatText(gALL);
+    }
+    if (timeTextHoiKhien>0)
+    {
+        textTimeHoiKhien.updateBeMatText(gALL,(intToString(timeTextHoiKhien/1000)+","+intToString((timeTextHoiKhien/10)%100)+"s").c_str(),{ 255, 255, 255 });
+    }
+    else
+    {
+        B.updateBeMatText(gALL);
+    }
+}
+void checkTocBien(){
+    // tocBientrai
+    if(keyState[SDL_SCANCODE_Q]&&clock()-timeTocBien>timeHoiTocBien){
+        timeTocBien=clock();
+        //dang nghi,chay sang phai
+        if (checkHoatDong==1||checkHoatDong==0||checkHoatDong==2){
+            checkHoatDong=3;
+            nhanVatgame.updateToaDoX(nhanVatgame.returnToaDoX()-60-pxDichChuyen);
+            if (clock()-timecu>30)
+            {
+                sizeCat.x += 90;
+                if (sizeCat.x >= 430)sizeCat.x = 0;
+                timecu=clock();
+            }
+        }
+        //dang chay sang trai
+        else if (checkHoatDong==3){
+        nhanVatgame.updateToaDoX(nhanVatgame.returnToaDoX()-pxDiChuyen-pxDichChuyen);
+        if (clock()-timecu>30)
+            {
+                sizeCat.x += 90;
+                if (sizeCat.x >= 430)sizeCat.x = 0;
+                timecu=clock();
+            }
+        }
+    }
+    // tocbienphai
+    else if(keyState[SDL_SCANCODE_E]&&clock()-timeTocBien>timeHoiTocBien){
+        timeTocBien=clock();
+        //dang nghi,chay sang trai
+        if (checkHoatDong==0||checkHoatDong==1||checkHoatDong==3){
+            checkHoatDong=2;
+            nhanVatgame.updateToaDoX(nhanVatgame.returnToaDoX()+60+pxDichChuyen);
+            if (clock()-timecu>1)
+            {
+                sizeCat.x += 90;
+                if (sizeCat.x >= 430)sizeCat.x = 0;
+                timecu=clock();
+            }
+        }
+        //dang chay sang phai
+        else if(checkHoatDong==2){
+            nhanVatgame.updateToaDoX(nhanVatgame.returnToaDoX()+pxDiChuyen+pxDichChuyen);
+            if (clock()-timecu>1)
+            {
+                sizeCat.x += 90;
+                if (sizeCat.x >= 430)sizeCat.x = 0;
+                timecu=clock();
+            }
+        }
+    }
+}
+void xuLyNhay(){
+    //nhay len
+    if (nhay==true&&buocNhay<=3)
+    {
+        nhanVatgame.updateToaDoY(nhanVatgame.returnToaDoY()-7);
+        buocNhay++;
+    }
+    else if (buocNhay>3)
+    {
+        buocNhay=0;
+        nhay=false;
+    }
+    //roi xuong
+    if (nhay==false&&nhanVatgame.returnToaDoY()<=760)
+    {
+        nhanVatgame.updateToaDoY(nhanVatgame.returnToaDoY()+7);
+    }
+}
+void tatKhien(){
+    if (clock()-timeKhien>timeKhienDuyTri)
+    {
+        dangBaoVe=false;
+    }
+}
+
+

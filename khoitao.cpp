@@ -126,12 +126,18 @@ bool bossG::updateToaDoBosVaVaTram(SDL_Surface* gALL, SDL_Rect &nhanvat){
     if (ToaDo.y>500)
     {
         if (SDL_HasIntersection(&nhanvat, &ToaDo)){
+            ToaDo.x=0;
+            ToaDo.y=1000;
             return 1;
         }
     }
     //surface nguồn.// vùng cần sao chép trên surface nguồn.//surface đích.//vùng cần vẽ trên surface đích.
     SDL_BlitSurface(surfaceLink, NULL, gALL, &ToaDo);
     return false;
+}
+void bossG::khoiTaoLaiToaDo(){
+    ToaDo.x=700;
+    ToaDo.y=0;
 }
 bossG::bossG(SDL_Surface* gALL, const char* path,int x, int y)
 {
@@ -142,16 +148,6 @@ bossG::bossG(SDL_Surface* gALL, const char* path,int x, int y)
     this->ToaDo.y = y;
     this->ToaDo.w = 10;
     this->ToaDo.h = 10;
-}
-bossG::bossG(SDL_Surface* gALL, const char* path,int x, int y,int w,int h)
-{
-    // SDL_Init( SDL_INIT_VIDEO );
-    // load link
-    this->surfaceLink = IMG_Load(path);
-    this->ToaDo.x = x;
-    this->ToaDo.y = y;
-    this->ToaDo.w = w;
-    this->ToaDo.h = h;
 }
 
 bossG::bossG(){
@@ -170,9 +166,7 @@ bossG::~bossG()
 // int bossG::returnToaDoX(){
 //     return ToaDo.x;
 // }
-// void bossG::updateToaDoX(int x){
-//     ToaDo.x=x;
-// }
+
 // // <<<<<<< HEAD
 // int bossG::returnToaDoY(){
 //     return ToaDo.y;

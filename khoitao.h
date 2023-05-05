@@ -74,11 +74,7 @@ public:
     ~bossG();
     void updateToaDoBosVaVaTram(SDL_Surface* gALL);
     bool updateToaDoBosVaVaTram(SDL_Surface* gALL,SDL_Rect &nhanvat);
-    // void updateToaDoX(int x);
-    // int returnToaDoX();
-    // int returnToaDoY();
-    // void updateToaDoY(int y);
-    // int (int y);
+    void khoiTaoLaiToaDo();
 };
 
 std::string intToString(int num);
