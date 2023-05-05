@@ -45,12 +45,11 @@ void Text::updateToaDoX(int x){
 int Text::returnToaDoX(){
     return ToaDo.x;
 }
+
 ///////////////////////////////////////////////////////////////////////////////////////
 
-
-
 void nhanvat::updateBeMat(SDL_Surface * gALL){
-    //surface nguồn.// vùng cần sao chép trên surface nguồn.//surface đích.//vùng cần vẽ trên surface đích.
+    //surface nguồn.// vùng cần sao chép trên surface nguồn.//surface đích.//vùng cần vẽ trên surface đích
     SDL_BlitSurface(surfaceLink, NULL, gALL, &ToaDo);
 }
 void nhanvat::updateBeMat(SDL_Surface * gALL,SDL_Rect &sizeCat){
@@ -102,12 +101,87 @@ int nhanvat::returnToaDoY(){
 void nhanvat::updateToaDoY(int y){
     ToaDo.y=y;
 }
-// =======
-// >>>>>>> 1b59e5bcb19d414b98793d8edfee7cea54582d29
+
+///////////////////////////////////////////////////////////////////////////////////////
+
+void bossG::updateToaDoBosVaVaTram(SDL_Surface * gALL){
+    //surface nguồn.// vùng cần sao chép trên surface nguồn.//surface đích.//vùng cần vẽ trên surface đích
+    SDL_BlitSurface(surfaceLink, NULL, gALL, &ToaDo);
+}
+bool bossG::updateToaDoBosVaVaTram(SDL_Surface* gALL, SDL_Rect &nhanvat){
+    //dduoir
+    if (ToaDo.x<nhanvat.x)
+    {
+        ToaDo.x+=tocDoDuoi;
+    }
+    else if (ToaDo.x>nhanvat.x)
+    {
+        ToaDo.x-=tocDoDuoi;
+    }
+    //roiw
+    
+    ToaDo.y+=tocDoRoi;
+    
+    //vatram
+    if (ToaDo.y>500)
+    {
+        if (SDL_HasIntersection(&nhanvat, &ToaDo)){
+            return 1;
+        }
+    }
+    //surface nguồn.// vùng cần sao chép trên surface nguồn.//surface đích.//vùng cần vẽ trên surface đích.
+    SDL_BlitSurface(surfaceLink, NULL, gALL, &ToaDo);
+    return false;
+}
+bossG::bossG(SDL_Surface* gALL, const char* path,int x, int y)
+{
+    SDL_Init( SDL_INIT_VIDEO );
+    // load link
+    this->surfaceLink = IMG_Load(path);
+    this->ToaDo.x = x;
+    this->ToaDo.y = y;
+    this->ToaDo.w = 10;
+    this->ToaDo.h = 10;
+}
+bossG::bossG(SDL_Surface* gALL, const char* path,int x, int y,int w,int h)
+{
+    // SDL_Init( SDL_INIT_VIDEO );
+    // load link
+    this->surfaceLink = IMG_Load(path);
+    this->ToaDo.x = x;
+    this->ToaDo.y = y;
+    this->ToaDo.w = w;
+    this->ToaDo.h = h;
+}
+
+bossG::bossG(){
+    this->surfaceLink = NULL;
+    this->ToaDo.x = 0;
+    this->ToaDo.y = 0;
+    this->ToaDo.w = 0;
+    this->ToaDo.h = 0;
+}
+bossG::~bossG()
+{
+    
+    SDL_FreeSurface(surfaceLink);
+	SDL_Quit();
+}
+// int bossG::returnToaDoX(){
+//     return ToaDo.x;
+// }
+// void bossG::updateToaDoX(int x){
+//     ToaDo.x=x;
+// }
+// // <<<<<<< HEAD
+// int bossG::returnToaDoY(){
+//     return ToaDo.y;
+// }
+// void bossG::updateToaDoY(int y){
+//     ToaDo.y=y;
+// }
+
 ///////////////////////////////////////////////////////////
-
-
-
 
 double ranDom(){
     //rand ()%(b -a+ 1)+a;    [a,b]

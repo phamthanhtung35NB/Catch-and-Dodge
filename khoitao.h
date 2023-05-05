@@ -13,6 +13,10 @@
 #include<time.h>
 #include <string>
 #include <SDL2/SDL_mixer.h>
+extern bool checkLoa;
+extern Mix_Music* music;
+extern const Uint8 * keyState;
+
 
 // extern int check=5;
 class Text {
@@ -55,6 +59,27 @@ public:
     // int (int y);
 };
 
+class bossG
+{
+private:
+    SDL_Rect ToaDo;
+    SDL_Surface* surfaceLink;
+    int tocDoRoi=4;
+    int tocDoDuoi=5;
+public:
+    bossG();
+    //khỏi tạo
+    bossG(SDL_Surface* gALL, const char* path, int x, int y);
+    bossG(SDL_Surface* gALL, const char* path,int x, int y,int w,int h);
+    ~bossG();
+    void updateToaDoBosVaVaTram(SDL_Surface* gALL);
+    bool updateToaDoBosVaVaTram(SDL_Surface* gALL,SDL_Rect &nhanvat);
+    // void updateToaDoX(int x);
+    // int returnToaDoX();
+    // int returnToaDoY();
+    // void updateToaDoY(int y);
+    // int (int y);
+};
 
 std::string intToString(int num);
 double ranDom();

@@ -5,9 +5,10 @@ SDL_Window* window=NULL;
 SDL_Surface* gall =NULL;
 std::string inputString;
 
+// bool checkLoa;
 
 // SDL_Texture* backgroundTexture = NULL;
-Mix_Music* music=NULL;
+
 Mix_Chunk* soundKichChuot=NULL;
 // const char* VIDEO_FILE_PATH = "videonhacnen.mp4";
 const int SCREEN_WIDTH = 1000;//1850;//rộng
@@ -20,7 +21,7 @@ nhanvat SurfaceFeedBack(gall,"data/feedback.png",5,720);
 nhanvat SurfacePlay(gall,"data/playkhian.png",374,576);
 nhanvat SurfaceExit(gall,"data/exitkhian.png",780,702);
 nhanvat SurfaceUserName(gall,"data/nhapthongtin.png",286,401);
-
+// keyState;
 bool initFileKhoiDong(){
 
     //Tạo một cửa sổ
@@ -40,13 +41,14 @@ std::string manHinhKhoiDong(){
     initFileKhoiDong();
     Text text12kitu(gall, "data/arial.ttf", 15,"Userame no more than 12 characters and no special characters",  { 255, 255, 255,255 },  293, 410);
     Text textName(gall, "data/arial.ttf", 40,inputString.c_str(),  { 255, 255, 255,255 },  305, 439);
-    bool quit,checkLoa,checkNhapName;
+    bool quit,checkNhapName;
     quit = false;
-    checkLoa=true;
+    
     checkNhapName=false;
     while (!quit) {
         SDL_Event event;
         while (SDL_PollEvent(&event)) {
+            keyState = SDL_GetKeyboardState(NULL);
             backgroundSurface.updateBeMat(gall);
             if (event.type == SDL_QUIT) {
                 inputString="        ";
@@ -86,11 +88,13 @@ std::string manHinhKhoiDong(){
             {
                 SurfaceFeedBack.updateBeMat(gall);
                 if (event.type == SDL_MOUSEBUTTONDOWN) {
-                    ShellExecute(NULL, "open", "https://github.com/phamthanhtung35NB/Catch-and-Dodge/issues/new", NULL, NULL, SW_SHOWNORMAL);
+                    // ShellExecute(NULL, "open", "https://github.com/phamthanhtung35NB/Catch-and-Dodge/issues/new", NULL, NULL, SW_SHOWNORMAL);
+                    // ShellExecute(NULL, "open", "https://www.facebook.com/phamthanhtung489", NULL, NULL, SW_SHOWNORMAL);
+                    SDL_OpenURL("https://www.facebook.com/phamthanhtung489");
                 }
             }
             //nút play
-            else if (x>374&&x<635&&y>576&&y<694)
+            else if ((x>374&&x<635&&y>576&&y<694)||keyState[SDL_SCANCODE_KP_ENTER])
             {
                 SurfacePlay.updateBeMat(gall);
                 if (event.type == SDL_MOUSEBUTTONDOWN) {

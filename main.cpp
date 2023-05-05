@@ -4,7 +4,8 @@
 std::string Name;//tên người chơi
 long diemdadat=0;//điểm đạt được
 int chedo=1;//chọn chế độ chơi
-
+bool checkLoa=true;
+Mix_Music* music=NULL;
 bool initMain(){
     if( SDL_Init( SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0 ){
         std::cout<<"Khong khoi tao duoc SDL: \n"<<SDL_GetError();
