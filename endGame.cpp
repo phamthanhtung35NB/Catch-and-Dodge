@@ -37,10 +37,10 @@ bool endGame(const int& Lv,const int& diemDatDuoc,const std::string& name){
     initFileEndGame();
     // Text name2(ggall, "data/arial.ttf", 15,name.c_str(),  { 0, 0, 0,0 },  204, 231);
     // Text diem2(ggall, "data/arial.ttf", 15,intToString(diemDatDuoc).c_str(),  { 0, 0, 0,0 },  291, 366);
-    Text name2(ggall, "data/3Dumb.ttf", 55,name.c_str(),  { 255, 255, 255,0 },  190, 200);
-    Text LV(ggall, "data/3Dumb.ttf", 50,("Level Max: "+intToString(Lv)).c_str(),  { 0, 0, 255,0 },  220, 310);
-    Text diem2(ggall, "data/3Dumb.ttf", 43,"Point Number Max",  { 0, 0, 255,0 },  200, 420);
-    Text Point(ggall, "data/3Dumb.ttf", 60,intToString(diemDatDuoc).c_str(),  { 0, 255, 0,0 },  330, 470);
+    Text name2(ggall, "data/KOMIKAX_.ttf", 43,name.c_str(),  { 255, 255, 255,0 },  200, 200);
+    Text LV(ggall, "data/KOMIKAX_.ttf", 50,("Level Max: "+intToString(Lv)).c_str(),  { 0, 0, 0,0 },  220, 280);
+    Text diem2(ggall, "data/KOMIKAX_.ttf", 35,"Point Number Max:",  { 0, 0, 255,0 },  200, 390);
+    Text Point(ggall, "data/KOMIKAX_.ttf", 60,intToString(diemDatDuoc).c_str(),  { 0, 255, 0,0 },  315, 440);
     bool quit,checkLoa,checkNhapName;
     quit = false;
     checkNhapName=false;

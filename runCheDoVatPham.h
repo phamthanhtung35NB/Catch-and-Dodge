@@ -30,6 +30,7 @@ void xuLyNhay();
 void tatKhien();
 void trangThaiNhanVat();
 // void troNgaiong();
+void hamTamDung();
 void hamEndGame();
 void hamUpdateLevel();
 void close();

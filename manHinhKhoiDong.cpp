@@ -39,8 +39,8 @@ bool initFileKhoiDong(){
 std::string manHinhKhoiDong(){
 
     initFileKhoiDong();
-    Text text12kitu(gall, "data/arial.ttf", 15,"Userame no more than 12 characters and no special characters",  { 255, 255, 255,255 },  293, 410);
-    Text textName(gall, "data/arial.ttf", 40,inputString.c_str(),  { 255, 255, 255,255 },  305, 439);
+    Text text12kitu(gall, "data/KOMIKAX_.ttf", 15,"Userame no more than 12 characters and no special characters",  { 255, 255, 255,255 },  240, 410);
+    Text textName(gall, "data/KOMIKAX_.ttf", 40,inputString.c_str(),  { 255, 255, 255,255 },  310, 422);
     bool quit,checkNhapName;
     quit = false;
     

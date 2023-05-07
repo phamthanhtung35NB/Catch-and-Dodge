@@ -34,7 +34,7 @@ double timeBossXuatHienLanTiep;
 
 bool nhay=false;
 bool dangBaoVe=false;
-bool quit = false;
+// 
 bool arrCoinTrueFalse[5]{false,false,false,false,false};//vvật phẩm nài còn trên màn hình
 bool arrBomTrueFalse[3]{false,false,false};
 bool checkBossDangHoatDong=false;
@@ -77,10 +77,12 @@ nhanvat(gALL,"data/1sao.png",872,295),
 nhanvat(gALL,"data/2sao.png",767,322),
 nhanvat(gALL,"data/3sao.png",767,300)
 };
-Text textDiem(gALL, "data/3Dumb.ttf", 65,  intToString(diem).c_str(),  { 255, 255, 255,255 },  1590, 510);
-Text textLevel(gALL, "data/3Dumb.ttf", 65,  ("level "+intToString(level)).c_str(),  { 255, 255, 255,255 },  1580, 810);
+Text textDiem(gALL, "data/KOMIKAX_.ttf", 65,  intToString(diem).c_str(),  { 255, 255, 255,255 },  1600, 490);
+Text textLevel(gALL, "data/KOMIKAX_.ttf", 65,  ("level "+intToString(level)).c_str(),  { 255, 255, 255,255 },  1580, 770);
 Text textTimeHoiKhien(gALL,"data/arial.ttf",30,(intToString(timeTextHoiKhien)+"S").c_str(),{ 255, 255, 255 },143,963);
 Text textTimeHoiTocBien(gALL,"data/arial.ttf",30,(intToString(timeTextHoiTocBien)+"s").c_str(),{ 255, 255, 255 },243,963);
+Text textTamDung(gALL, "data/KOMIKAX_.ttf", 75,"press \"T\" to continue",  { 255, 255, 255,255 },  400, 490);
+
 //huong dan
 Text QE(gALL,"data/3Dumb.ttf",30,"Q-E",{ 255, 255, 255 },245,970);
 Text B(gALL,"data/3Dumb.ttf",30," B ",{ 255, 255, 255 },153,970);
@@ -108,7 +110,7 @@ int runCheDoVatPham(std::string name)
     khungXYWHbom[1].h=82;////82
     khungXYWHbom[2].w=83;
     khungXYWHbom[2].h=83;
-
+    bool quit = false;
     
     if (!init())
     {
@@ -212,6 +214,13 @@ int runCheDoVatPham(std::string name)
             timeKhien=clock();
             dangBaoVe=true;
         }
+        //tam dung
+        else if (keyState[SDL_SCANCODE_ESCAPE]||keyState[SDL_SCANCODE_T])
+        {
+            hamTamDung(); 
+              
+        }
+        
         //nhay
         if(keyState[SDL_SCANCODE_SPACE]&&nhay==false){
             nhay=true;
@@ -321,21 +330,21 @@ void hamUpdateLevel(){
     {
         
         HP++;
-        level++;
         hamEndGame();
+        level++;
         tocDoRoi++;
     }
     else if ((diem>=5500&&level==7)||(diem>=6000&&level==8))
     {
         HP++;
-        level++;
         hamEndGame();
+        level++;
     }
     else if (diem>=7000&&level==9)
     {
         HP++;
-        level++;
         hamEndGame();
+        level++;
         tocDoRoi++;
         pxDiChuyen++;
     }
@@ -365,6 +374,42 @@ bool init(){
     soundCoi = Mix_LoadWAV("data/coin.wav");
     soundNo = Mix_LoadWAV("data/bomNo.wav");
     return true;
+}
+void hamTamDung(){
+    bool quit=false;
+    
+    SDL_Delay(20);
+    while (quit==false)
+    {
+        keyState = SDL_GetKeyboardState(NULL);
+        SDL_Event e;
+        if (keyState[SDL_SCANCODE_T])
+        {
+            Mix_PlayChannel(-1, soundCoi, 0);
+            quit=true;
+        }
+        while (SDL_PollEvent(&e))
+        {
+            if (e.type == SDL_QUIT){
+                quit = true;
+                diem=-1000;
+            }        
+        }
+        gBackground.updateBeMat(gALL);
+        nhanVatgame.updateBeMat(gALL,sizeCat);
+        troNgaiOng.updateToaDoBosVaVaTram(gALL);
+        //khung
+        khungNoi.updateBeMat(gALL);
+        upDateAnhXuatHienTocBienVsKhien();
+        //thanh HP
+        updateHP();
+        //điểm
+        textDiem.updateBeMatText(gALL, intToString(diem).c_str(),{ 255, 255, 255 });
+        //leve
+        textLevel.updateBeMatText(gALL,("Level "+intToString(level)).c_str(),{ 0, 0, 0 });
+        textTamDung.updateBeMatText(gALL);
+        SDL_UpdateWindowSurface(gWindow);
+    }
 }
 void vaTram(){
     khungXYWHnhanVat.x=nhanVatgame.returnToaDoX();
@@ -529,10 +574,14 @@ void close()
     }
     diem=0;
     HP=3;
-    quit=false;
 	SDL_DestroyWindow( gWindow );
 }
 void hamEndGame(){
+    Text textLevelTruoc(gALL,"data/KOMIKAX_.ttf", 50,  ("level "+intToString(level)).c_str(),  { 255, 255, 255,255 },  820, 440);
+    Text gach2soc(gALL,"data/KOMIKAX_.ttf", 50,  "||",  { 0, 0, 0,255 },  980, 500);
+    Text V(gALL,"data/KOMIKAX_.ttf", 50,  "V",  { 0, 0, 0,255 },  984, 550);
+    Text textLevelUp(gALL,"data/KOMIKAX_.ttf", 50,  ("level "+intToString(level)).c_str(),  { 0, 0, 255,255 },  820, 615);
+
     bool quit=false;
     int x, y;
     if (HP>3)
@@ -550,7 +599,6 @@ void hamEndGame(){
         }
         endGame.updateBeMat(gALL);
         if (SDL_PollEvent(&e)){
-            
             SDL_GetMouseState(&x, &y);
             if (x>841&&x<841+177&&y>738&&y<63+738)
             {
@@ -566,6 +614,10 @@ void hamEndGame(){
                 quit=true;  
             }
         }
+        textLevelTruoc.updateBeMatText(gALL,("Level "+intToString(level)).c_str(),{ 0, 0, 0 });
+        gach2soc.updateBeMatText(gALL);
+        V.updateBeMatText(gALL);
+        textLevelUp.updateBeMatText(gALL,("Level "+intToString(level+1)).c_str(),{ 0, 0, 255 });
         sao[HP].updateBeMat(gALL);
         SDL_UpdateWindowSurface(gWindow);
     }
