@@ -153,6 +153,7 @@ int runCheDoVatPham(std::string name)
         {
             if (e.type == SDL_QUIT){
                 quit = true;
+                // khi ấn thoát
                 diem=-1000;
             }
             // int x, y;
@@ -573,6 +574,7 @@ void close()
         }
     }
     diem=0;
+    level=1;
     HP=3;
 	SDL_DestroyWindow( gWindow );
 }

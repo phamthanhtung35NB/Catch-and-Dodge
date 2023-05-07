@@ -178,22 +178,19 @@ bossG::~bossG()
 ///////////////////////////////////////////////////////////
 
 double ranDom(){
-    //rand ()%(b -a+ 1)+a;    [a,b]
-    // clock_t start, end;   // Khai báo biến thời gian
-    // double time_use;      // Thời gian sử dụng
-    // start = clock();  
-    // end = clock();  // lấy thời gian sau khi thực hiện 
-    double timesau=clock()%10;
-    // if (timesau<5)
-    // {   
-    //     int timez=clock()%100;
-    //     // while (timez>15||timez==0)
-    //     // {
-    //     //    timez=clock()%100;
-    //     // }
-    //     return timez*100;
-    // }else
-    return timesau*100;
+    // double timesau=clock()%10;
+    // return timesau*100;
+    int minVal=1;
+    int maxVal=140;
+    static bool initialized = false;
+    if (!initialized) {
+        std::srand(std::time(nullptr));
+        initialized = true;
+    }
+
+    int rangeSize = maxVal - minVal + 1; // thêm 1 để bao gồm cả giá trị maxVal trong khoảng giá trị có thể
+    int randomValue = std::rand() % rangeSize + minVal;
+    return randomValue * 10;
 
 }
 std::string intToString(int num) {

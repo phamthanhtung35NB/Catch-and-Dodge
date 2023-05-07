@@ -107,6 +107,7 @@ std::string manHinhKhoiDong(){
                 SurfaceExit.updateBeMat(gall);
                 if (event.type == SDL_MOUSEBUTTONDOWN) {
                     quit=true;
+                    inputString="        ";
                     Mix_PlayChannel(-1, soundKichChuot, 0);
                     SDL_Delay(1000);
                 }

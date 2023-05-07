@@ -36,7 +36,7 @@ int main( int argc, char* args[] )
         ///////chedo=hàm chọn chế độ
         
         
-        
+        //Name!="        " //ấn nút thoát ngay trong màn hình đăng nhập
         if (chedo==1&&Name!="        ")
         {
             //chế độ vât phẩm
@@ -49,6 +49,7 @@ int main( int argc, char* args[] )
             chedo=0;
             return 0;
         }
+        //khi ấn thoát ở trong game
         if (diemdadat==-1000)
         {
             SDL_Quit();
