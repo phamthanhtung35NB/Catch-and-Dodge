@@ -42,6 +42,7 @@ bool checkBossDangHoatDong=false;
 SDL_Window* gWindow = NULL;
 //be mat de ve
 SDL_Surface* gALL = NULL;
+Mix_Music* music2 = NULL;
 Mix_Chunk* soundCoi=NULL;
 Mix_Chunk* soundNo=NULL;
 
@@ -59,7 +60,7 @@ nhanvat(gALL,"data/bomDai.png",1850,0),
 nhanvat(gALL,"data/boBom.png",1850,0),
 };
 
-bossG troNgaiOng(gALL,"data/ong.png",0,0);
+bossG troNgaiOng(gALL,"data/ong.png",0,1100);
 nhanvat khien(gALL,"data/khien.png",150,915);
 nhanvat tocBien(gALL,"data/tocBien.png",250,915);
 nhanvat gBackground(gALL,"data/anhnenchuan.png",0,0);
@@ -119,7 +120,6 @@ int runCheDoVatPham(std::string name)
     }
     Text textName(gALL, "data/3Dumb.ttf", 35,  name.c_str(),  { 255, 255, 255,255 },  1550, 230);
     SDL_Event e;
-    
     while (quit == false)
     {
         if (clock()-timeXuatHien>1000 && soLuongCoin<5&&arrCoinTrueFalse[soLuongCoin]==false)
@@ -272,7 +272,7 @@ int runCheDoVatPham(std::string name)
             khienChoNhanVat.updateBeMat(gALL);
         }
         //boss
-        troNgaiOng.updateToaDoBosVaVaTram(gALL);
+        // troNgaiOng.updateToaDoBosVaVaTram(gALL);
         //khung
         khungNoi.updateBeMat(gALL);
         // toc bien+khien
@@ -365,13 +365,14 @@ bool init(){
     }
     gALL = SDL_GetWindowSurface( gWindow );
     int imgFlags = IMG_INIT_PNG;
+    SDL_Init(SDL_INIT_AUDIO);
     if (!(IMG_Init(imgFlags) & imgFlags)){
         printf("SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError());
         return false;
     }
-    Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);//
-    music = Mix_LoadMUS("data/nhacnendotoc.mp3");
-    Mix_PlayMusic(music, -1);
+    Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 1, 2048);
+    music2 = Mix_LoadMUS("data/nhacnendotoc2.mp3");
+    if (checkLoa==true)Mix_PlayMusic(music2, -1);
     soundCoi = Mix_LoadWAV("data/coin.wav");
     soundNo = Mix_LoadWAV("data/bomNo.wav");
     return true;

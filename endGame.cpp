@@ -7,7 +7,7 @@ SDL_Surface* ggall =NULL;
 bool trueFalse= true;
 
 // SDL_Texture* backgroundTexture = NULL;
-Mix_Music* music2=NULL;
+Mix_Music* music3=NULL;
 Mix_Chunk* soundKichChuot2=NULL;
 // const char* VIDEO_FILE_PATH = "videonhacnen.mp4";
 const int SCREEN_WIDTH = 800;//1850;//rộng
@@ -27,8 +27,8 @@ bool initFileEndGame(){
     Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
     // Tạo trình kết xuất cho cửa sổ
     ggall = SDL_GetWindowSurface( ggwindow );
-    music2 = Mix_LoadMUS("data/nhacnendotoc.mp3");
-    Mix_PlayMusic(music2, -1);
+    music3 = Mix_LoadMUS("data/nhacnendotoc.mp3");
+    Mix_PlayMusic(music3, -1);
     soundKichChuot2 = Mix_LoadWAV("data/chuotkich.wav");
     return true;
 }
@@ -50,6 +50,7 @@ bool endGame(const int& Lv,const int& diemDatDuoc,const std::string& name){
             nen.updateBeMat(ggall);
             if (event.type == SDL_QUIT) {
                 quit = true;
+                trueFalse=false;
             }
             int x, y;
             SDL_GetMouseState(&x, &y);
@@ -91,7 +92,7 @@ bool endGame(const int& Lv,const int& diemDatDuoc,const std::string& name){
         LV.updateBeMatText(ggall);
         SDL_UpdateWindowSurface(ggwindow);
     }
-    Mix_FreeMusic(music2);
+    Mix_FreeMusic(music3);
     Mix_FreeChunk(soundKichChuot2);
     // SDL_DestroyTexture(backgroundTexture);
     // SDL_FreeSurface(nen);

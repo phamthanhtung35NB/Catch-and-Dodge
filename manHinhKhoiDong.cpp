@@ -3,7 +3,7 @@
 SDL_Window* window=NULL;
 
 SDL_Surface* gall =NULL;
-std::string inputString;
+
 
 // bool checkLoa;
 
@@ -26,7 +26,7 @@ bool initFileKhoiDong(){
 
     //Tạo một cửa sổ
     window = SDL_CreateWindow("Start", SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED, 1000, 800, SDL_WINDOW_SHOWN);
-    Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
+    // Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
     // Tạo trình kết xuất cho cửa sổ
     gall = SDL_GetWindowSurface( window );
     // renderer = SDL_CreateRenderer(window, -1, 0);
@@ -36,7 +36,7 @@ bool initFileKhoiDong(){
     soundKichChuot = Mix_LoadWAV("data/chuotkich.wav");
     return true;
 }
-std::string manHinhKhoiDong(){
+int manHinhKhoiDong(){
 
     initFileKhoiDong();
     Text text12kitu(gall, "data/KOMIKAX_.ttf", 15,"Userame no more than 12 characters and no special characters",  { 255, 255, 255,255 },  240, 410);
@@ -47,8 +47,8 @@ std::string manHinhKhoiDong(){
     checkNhapName=false;
     while (!quit) {
         SDL_Event event;
+        keyState = SDL_GetKeyboardState(NULL);
         while (SDL_PollEvent(&event)) {
-            keyState = SDL_GetKeyboardState(NULL);
             backgroundSurface.updateBeMat(gall);
             if (event.type == SDL_QUIT) {
                 inputString="        ";
@@ -126,10 +126,7 @@ std::string manHinhKhoiDong(){
                     checkNhapName=false;
                 }
             }
-            //else if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_RETURN&&checkNhapName==true) {
-            //         std::cout << "-----" << inputString.c_str() << std::endl;
-            //         // inputString.clear();
-            // }
+            
             if (checkNhapName==true)
             {
                 if (event.type == SDL_TEXTINPUT && inputString.size()<=12) {
@@ -138,10 +135,7 @@ std::string manHinhKhoiDong(){
                     inputString.pop_back();
                     SDL_Delay(100);
                 }
-
             }
-
-            
         }
         if (checkLoa==false)
         {
@@ -153,21 +147,69 @@ std::string manHinhKhoiDong(){
             textName.updateBeMatText(gall, inputString.c_str(),{ 0, 0, 0 });
             text12kitu.updateBeMatText(gall);
         }
-        
-
-        
 
         SDL_UpdateWindowSurface(window);
     }
-    Mix_FreeMusic(music);
-    Mix_FreeChunk(soundKichChuot);
-    // SDL_DestroyTexture(backgroundTexture);
-    // SDL_FreeSurface(backgroundSurface);
+    
+    return luaChonCheDo();
+}
+int luaChonCheDo(){
+    nhanvat backgroup(gall,"data/backgrounlogin.png",0,0);
+    nhanvat thanhchdo1(gall,"data/nhapthongtin.png",286,300);
+    nhanvat thanhchdo2(gall,"data/nhapthongtin.png",286,500);
+    Text textso1(gall, "data/KOMIKAX_.ttf", 35,"Catch and Dodge",  { 255, 255, 255,255 },  325, 323);
+    Text textso2(gall, "data/KOMIKAX_.ttf", 35,"Coming soon",  { 255, 255, 255,255 },  370, 523);
+    bool quit2 = false;
+    while (!quit2) {
+        SDL_Event event;
+        keyState = SDL_GetKeyboardState(NULL);
+        while (SDL_PollEvent(&event)) {
+            backgroup.updateBeMat(gall);
+            thanhchdo1.updateBeMat(gall);
+            thanhchdo2.updateBeMat(gall);
+            if (event.type == SDL_QUIT) {
+                quit2 = true;
+                return 0;
+            }
+            int x, y;
+            SDL_GetMouseState(&x, &y);
+            //nut 1
 
-    // SDL_DestroyRenderer(renderer);
-    SDL_DestroyWindow(window);
-    // SDL_Quit();
-    return inputString;
+            if (x>286&&x<716&&y>301&&y<409)
+            {
+                textso1.updateBeMatText(gall, "Catch and Dodge",{ 0, 0, 255 });
+                textso2.updateBeMatText(gall,"Coming soon",{ 0, 0, 0 });
+                if (event.type == SDL_MOUSEBUTTONDOWN) {
+                    quit2=true;
+                    return 1;
+                }
+            }
+            //nút 2
+            else if (x>286&&x<716&&y>501&&y<609)
+            {
+                textso1.updateBeMatText(gall, "Catch and Dodge",{ 0, 0, 0 });
+                textso2.updateBeMatText(gall,"Coming soon",{ 0, 0, 255 });
+                if (event.type == SDL_MOUSEBUTTONDOWN) {
+                    quit2=true;
+                    return 2;
+                }
+            }
+            else
+            {
+                textso1.updateBeMatText(gall, "Catch and Dodge",{ 0, 0, 0 });
+                textso2.updateBeMatText(gall,"Coming soon",{ 0, 0, 0 });
+            }
+            
+        SDL_UpdateWindowSurface(window);
+        }
+    }
+    return 0;
+}
+void thoat(){
+    // Mix_HaltMusic();
+    // Mix_FreeMusic(music);
+    // Mix_FreeChunk(soundKichChuot);
+    // SDL_DestroyWindow(window);
 }
 
 
