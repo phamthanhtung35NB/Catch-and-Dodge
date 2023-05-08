@@ -29,12 +29,10 @@ public:
     void updateToaDoY(int y);
     int returnToaDoY();
     void updateToaDoX(int X);
-    int returnToaDoX() ;
-    // int randomDiemA();
-    // int randomTruot();
+    int returnToaDoX();
+    void updateWH(const char* message,int &W,int &H);
 private:
     TTF_Font* font;
-    // SDL_Texture* texture;
     SDL_Rect ToaDo;
     SDL_Surface* surfaceLinkText;
 };

@@ -43,7 +43,6 @@ int main( int argc, char* args[] )
         //inputString!="        " //ấn nút thoát ngay trong màn hình đăng nhập
         if (inputString!="        ")
         {
-            
             if (chedo==1)
             {
                 //chế độ vât phẩm
@@ -62,7 +61,6 @@ int main( int argc, char* args[] )
                 SDL_Quit();
                 return 0;
             }
-            
             bool luaChonKetThuc=false;
             luaChonKetThuc=endGame(level,diemdadat,inputString);
             //tiep tuc choi
@@ -76,7 +74,6 @@ int main( int argc, char* args[] )
                 return 0;
             }
         }
-
     }
     SDL_Quit();
     return 0;

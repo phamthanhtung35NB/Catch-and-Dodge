@@ -45,6 +45,9 @@ void Text::updateToaDoX(int x){
 int Text::returnToaDoX(){
     return ToaDo.x;
 }
+void Text::updateWH(const char* message,int &W,int &H){
+    TTF_SizeText(font,message,&W,&H);
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
